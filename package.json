@@ -1,0 +1,14 @@
+{
+  "name": "glyth-snapshot",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Clean-room hackathon prototype: Glyth Snapshot — context-aware daily planning.",
+  "scripts": {
+    "start": "node server/server.js",
+    "dev": "node server/server.js",
+    "test": "node --test tests/*.test.js",
+    "check": "node --check server/server.js && node --check src/domain/engine.js && node --check src/employer/engine.js && node --check app.js && node --check employer-dashboard/employer.js"
+  },
+  "engines": { "node": ">=20" }
+}

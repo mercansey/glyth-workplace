@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Glyth Workplace — Employer</title><meta name="theme-color" content="#F7F7F5">
+<script>try{var th=localStorage.getItem('glyth-snapshot-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=th}catch(e){document.documentElement.dataset.theme='light'}</script>
+<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="employer.css"></head>
+<body>
+<main class="shell emp-shell">
+  <header class="top"><div class="top-inner" style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
+    <button class="wordmark" id="orgBtn" aria-label="Organisation switcher">GLYTH WORKPLACE</button>
+    <div class="top-actions"><span class="chip" id="actorChip">Northstar · Owner</span></div>
+  </div></header>
+
+  <section id="view-overview" class="view" aria-label="Overview"><div id="overviewRoot"><p class="muted">Loading organisation…</p></div></section>
+  <section id="view-teams" class="view hidden" aria-label="Teams"><div>
+    <div class="label">Teams</div><h1 style="font-size:28px">Teams, in aggregate.</h1>
+    <p class="muted" style="margin:0">Privacy-safe team state. Individual data is never shown to employers.</p></div>
+    <div id="teamsRoot" style="margin-top:16px"></div></section>
+  <section id="view-insights" class="view hidden" aria-label="Insights"><div>
+    <div class="label">Insights</div><h1 style="font-size:28px">What the organisation is noticing.</h1>
+    <p class="muted" style="margin:0">Aggregates only — observed is kept distinct from inferred.</p></div>
+    <div id="insightsRoot" style="margin-top:16px"></div></section>
+</main>
+
+<div class="dock"><nav class="liquid" aria-label="Employer"><span class="nav-indicator" aria-hidden="true"></span><button data-view="overview" aria-selected="true">Overview</button><button data-view="teams" aria-selected="false">Teams</button><button data-view="insights" aria-selected="false">Insights</button></nav></div>
+<div id="backdrop" class="backdrop hidden"></div>
+<div id="sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-label="Sheet"><div class="sheet-inner"><button class="icon-btn" id="closeSheet" style="float:right">Close</button><div id="sheetContent"></div></div></div>
+<script type="module" src="employer.js"></script>
+</body></html>
