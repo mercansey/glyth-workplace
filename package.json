@@ -3,12 +3,30 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Clean-room hackathon prototype: Glyth Snapshot — context-aware daily planning.",
+  "description": "Clean-room hackathon prototype: Glyth Snapshot \u2014 context-aware daily planning.",
   "scripts": {
     "start": "node server/server.js",
     "dev": "node server/server.js",
-    "test": "node --test tests/*.test.js",
-    "check": "node --check server/server.js && node --check src/domain/engine.js && node --check src/employer/engine.js && node --check app.js && node --check employer-dashboard/employer.js"
+    "test": "DEMO_MODE=true node --test tests/*.test.js",
+    "check": "node --check server/server.js && node --check src/domain/engine.js && node --check src/employer/engine.js && node --check src/bridge/bridge.js && node --check src/bridge/client.js && node --check src/server/env.js && node --check src/server/ratelimit.js && node --check src/server/static.js && node --check src/data/canonical.js && node --check src/data/baselines.js && node --check src/data/calendar.js && node --check src/data/training.js && node --check src/data/workload.js && node --check src/data/plan.js && node --check src/data/jobs.js && node --check src/data/providers.js && node --check src/data/repository.js && node --check src/ai/providers.js && node --check src/mindfulness/mindfulness.js && node --check src/mindfulness/providers.js && node --check app.js && node --check employer-dashboard/employer.js && node --check src/fitness/fitness.js && node --check src/data/repository.js && node --check src/finance/finance.js && node --check src/finance/parse.js && node --check src/finance/meta.js && node --check src/family/family.js && node --check src/ai/chat.js && node --check server/server.js && node --check src/employer/repository.js && node --check scripts/bootstrap-employer.mjs",
+    "build:web": "node scripts/build-web.mjs",
+    "cap:sync": "npm run build:web && cap sync ios",
+    "cap:ios": "npm run cap:sync && cap open ios"
   },
-  "engines": { "node": ">=20" }
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@capacitor/app": "^7.0.0",
+    "@capacitor/haptics": "^7.0.0",
+    "@capacitor/keyboard": "^7.0.0",
+    "@capacitor/network": "^7.0.0",
+    "@capacitor/push-notifications": "^7.0.0",
+    "@capacitor/browser": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/ios": "^7.0.0"
+  }
 }

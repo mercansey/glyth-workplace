@@ -1,5 +1,0 @@
--- Synthetic demo persona (Alex). Replace user_id with your demo auth user.
--- Goals: Improve strength / Protect work performance / Improve recovery consistency.
--- Baselines: sleep 7h15 (435m), recovery 72. Today: 07:30 heavy strength,
--- 10:00 deep work, 14:00 investor meeting (critical), 17:00 admin.
--- In DEMO_MODE the app seeds this same persona in-memory; this file mirrors it for Supabase.

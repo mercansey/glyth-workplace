@@ -1,0 +1,231 @@
+{
+  "voice": "cgSgspJ2msm6clMCkdW9",
+  "model": "eleven_multilingual_v2",
+  "script": "demo-video/vo-script-3min.json",
+  "lines": [
+    {
+      "n": 1,
+      "file": "line_01.mp3",
+      "act": "1 Hook",
+      "start": 0.5,
+      "text": "Most wellness programmes are built for an average employee."
+    },
+    {
+      "n": 2,
+      "file": "line_02.mp3",
+      "act": "1 Hook",
+      "start": 4.5,
+      "text": "But nobody has an average day."
+    },
+    {
+      "n": 3,
+      "file": "line_03.mp3",
+      "act": "1 Hook",
+      "start": 7.5,
+      "text": "Sleep, workload, meetings, pressure. It all shows up at work."
+    },
+    {
+      "n": 4,
+      "file": "line_04.mp3",
+      "act": "1 Hook",
+      "start": 11.8,
+      "text": "Meet Glyth Workplace."
+    },
+    {
+      "n": 5,
+      "file": "line_05.mp3",
+      "act": "2 Employee",
+      "start": 15.5,
+      "text": "Glyth gives every employee a personal wellbeing companion that understands their day, and plans around what matters."
+    },
+    {
+      "n": 6,
+      "file": "line_06.mp3",
+      "act": "2 Employee",
+      "start": 23.5,
+      "text": "This morning, you're on track. Strength training at seven, deep work at ten, and the investor meeting at two."
+    },
+    {
+      "n": 7,
+      "file": "line_07.mp3",
+      "act": "2 Employee",
+      "start": 32,
+      "text": "Then life happens."
+    },
+    {
+      "n": 8,
+      "file": "line_08.mp3",
+      "act": "2 Employee",
+      "start": 34,
+      "text": "Four hours and forty-two minutes of sleep. Your third short night in a row."
+    },
+    {
+      "n": 9,
+      "file": "line_09.mp3",
+      "act": "2 Employee",
+      "start": 40.5,
+      "text": "Most apps would just show you a score. Glyth re-plans your workday."
+    },
+    {
+      "n": 10,
+      "file": "line_10.mp3",
+      "act": "2 Employee",
+      "start": 47,
+      "text": "Heavy training becomes a recovery session."
+    },
+    {
+      "n": 11,
+      "file": "line_11.mp3",
+      "act": "2 Employee",
+      "start": 50.5,
+      "text": "Deep work is protected."
+    },
+    {
+      "n": 12,
+      "file": "line_12.mp3",
+      "act": "2 Employee",
+      "start": 53,
+      "text": "A recovery break is added before your meeting."
+    },
+    {
+      "n": 13,
+      "file": "line_13.mp3",
+      "act": "2 Employee",
+      "start": 57,
+      "text": "Admin moves to tomorrow. And the meeting that matters never moves."
+    },
+    {
+      "n": 14,
+      "file": "line_14.mp3",
+      "act": "2 Employee",
+      "start": 63,
+      "text": "Tap why, and Glyth shows its reasoning: what it observed, and how it responded."
+    },
+    {
+      "n": 15,
+      "file": "line_15.mp3",
+      "act": "3 Trust",
+      "start": 70,
+      "text": "You stay in control. Ask Glyth anything, and nothing changes until you confirm it."
+    },
+    {
+      "n": 16,
+      "file": "line_16.mp3",
+      "act": "3 Trust",
+      "start": 79,
+      "text": "And your personal data stays yours. Your employer never sees your sleep, your health, or your conversations."
+    },
+    {
+      "n": 17,
+      "file": "line_17.mp3",
+      "act": "4 Whole person",
+      "start": 88.5,
+      "text": "Because wellbeing at work is about more than sleep."
+    },
+    {
+      "n": 18,
+      "file": "line_18.mp3",
+      "act": "4 Whole person",
+      "start": 92.5,
+      "text": "Training that adapts to how you've recovered."
+    },
+    {
+      "n": 19,
+      "file": "line_19.mp3",
+      "act": "4 Whole person",
+      "start": 97,
+      "text": "A five-minute reset before a high-pressure meeting."
+    },
+    {
+      "n": 20,
+      "file": "line_20.mp3",
+      "act": "4 Whole person",
+      "start": 102,
+      "text": "Gentle nudges to stay connected with the people who matter."
+    },
+    {
+      "n": 21,
+      "file": "line_21.mp3",
+      "act": "4 Whole person",
+      "start": 107.5,
+      "text": "And clarity on your finances, because money worries come to work too."
+    },
+    {
+      "n": 22,
+      "file": "line_22.mp3",
+      "act": "4 Whole person",
+      "start": 113.5,
+      "text": "One companion for the whole person."
+    },
+    {
+      "n": 23,
+      "file": "line_23.mp3",
+      "act": "5 Employer",
+      "start": 119,
+      "text": "For employers, Glyth Workplace turns wellbeing into something you can see, and act on."
+    },
+    {
+      "n": 24,
+      "file": "line_24.mp3",
+      "act": "5 Employer",
+      "start": 126.5,
+      "text": "A live view of how your organisation is doing. Team by team, in aggregate."
+    },
+    {
+      "n": 25,
+      "file": "line_25.mp3",
+      "act": "5 Employer",
+      "start": 133,
+      "text": "Glyth spots patterns early, like meeting load starting to eat into focus time."
+    },
+    {
+      "n": 26,
+      "file": "line_26.mp3",
+      "act": "5 Employer",
+      "start": 140,
+      "text": "It suggests a response. You approve it. Then you see what changed."
+    },
+    {
+      "n": 27,
+      "file": "line_27.mp3",
+      "act": "5 Employer",
+      "start": 146,
+      "text": "Focus fragmentation in one team, down from thirty-one to twenty-one percent."
+    },
+    {
+      "n": 28,
+      "file": "line_28.mp3",
+      "act": "5 Employer",
+      "start": 153,
+      "text": "Run programmes across teams, and measure their impact over time."
+    },
+    {
+      "n": 29,
+      "file": "line_29.mp3",
+      "act": "5 Employer",
+      "start": 159,
+      "text": "All without surveillance. Small teams stay private, and individual data is never shown."
+    },
+    {
+      "n": 30,
+      "file": "line_30.mp3",
+      "act": "6 Close",
+      "start": 168.5,
+      "text": "Healthier people. Better work."
+    },
+    {
+      "n": 31,
+      "file": "line_31.mp3",
+      "act": "6 Close",
+      "start": 172,
+      "text": "Glyth Workplace."
+    },
+    {
+      "n": 32,
+      "file": "line_32.mp3",
+      "act": "6 Close",
+      "start": 174,
+      "text": "Wellbeing that works with your workday."
+    }
+  ]
+}

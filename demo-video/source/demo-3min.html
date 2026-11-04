@@ -1,0 +1,703 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+:root{--bg:#F7F7F5;--paper:#FBFBF9;--surface:#ECECEA;--surface2:#E6E6E4;--ink:#121316;--ink2:#3c3f45;--muted:#73736e;--faint:#9a9a94;--line:#E1E0DA;--good:#2f7d4f;--gold:#D9C48D;--goldbg:#FBF6E8;--newbg:#EEF6F0;--newb:#A9CFB5;--warn:#9a6a14}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;overflow:hidden;background:#fff;font-family:Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased;color:var(--ink)}
+.abs{position:absolute}
+#stage{position:absolute;inset:0;overflow:hidden;background:#fff}
+#grad{position:absolute;inset:-10%;opacity:0}
+#grad .b{position:absolute;border-radius:50%;filter:blur(120px)}
+.cam{position:absolute;inset:0;transform-origin:0 0}
+.layer{position:absolute;inset:0}
+.wm{font-size:72px;font-weight:800;letter-spacing:.16em;white-space:pre;line-height:1}
+.tile{position:absolute;width:110px;height:110px;border-radius:28px;background:#fff;border:1px solid rgba(18,19,22,.07);display:flex;align-items:center;justify-content:center;box-shadow:0 6px 16px rgba(18,19,22,.10)}
+.tile img{width:70%;display:block}
+.cursor{position:absolute;left:0;top:0;width:44px;height:44px;transform-origin:4px 3px;z-index:50;opacity:0}
+.ripple{position:absolute;width:60px;height:60px;border-radius:50%;border:3px solid #121316;opacity:0;z-index:49}
+.pill{position:absolute;padding:10px 18px;border-radius:99px;background:rgba(255,255,255,.8);border:1px solid rgba(18,19,22,.08);font-size:15px;font-weight:750;letter-spacing:.16em;box-shadow:0 8px 24px rgba(18,19,22,.08)}
+.cap{position:absolute;font-size:64px;font-weight:650;letter-spacing:-.04em;line-height:1.06}
+.chip{position:absolute;left:0;top:0;padding:18px 24px;border-radius:26px;background:rgba(255,255,255,.93);border:1px solid rgba(18,19,22,.07);box-shadow:0 18px 50px rgba(18,19,22,.12);white-space:nowrap}
+.chip .k{font-size:12px;letter-spacing:.14em;font-weight:700;color:var(--muted)}
+.chip .v{font-size:30px;font-weight:650;letter-spacing:-.03em;margin-top:4px;display:flex;align-items:center;gap:10px}
+.chip.small{padding:12px 18px;border-radius:20px}
+.chip.small .v{font-size:21px}
+.arrow{position:absolute;height:3px;background:#121316;border-radius:2px;transform-origin:0 50%}
+.arrow:after{content:"";position:absolute;right:-2px;top:-6px;border-left:12px solid #121316;border-top:7.5px solid transparent;border-bottom:7.5px solid transparent}
+/* ---- act1 ---- */
+.dcard{position:absolute;width:220px;height:118px;border-radius:22px;background:var(--paper);border:1px solid var(--line);box-shadow:0 6px 18px rgba(18,19,22,.05)}
+.dcard .av{position:absolute;left:16px;top:16px;width:30px;height:30px;border-radius:50%;background:var(--surface2)}
+.dcard .nm{position:absolute;left:56px;top:20px;width:80px;height:8px;border-radius:4px;background:var(--surface2)}
+.dcard .nm2{position:absolute;left:56px;top:34px;width:50px;height:6px;border-radius:3px;background:var(--surface)}
+.dcard .trk{position:absolute;left:16px;right:16px;top:72px;height:22px;border-radius:8px;background:var(--surface)}
+.dcard .blk{position:absolute;top:0;height:22px;border-radius:7px;background:#CFCDC6}
+.word{position:absolute;top:470px;font-size:96px;font-weight:700;letter-spacing:-.045em;white-space:nowrap}
+/* ---- phone ---- */
+#phone{left:753px;top:106px;width:414px;height:868px;border-radius:66px;background:#121316;padding:12px;box-shadow:0 50px 120px rgba(18,19,22,.22),0 10px 30px rgba(18,19,22,.12)}
+#screen{position:relative;width:390px;height:844px;border-radius:54px;background:var(--bg);overflow:hidden}
+#island{position:absolute;left:135px;top:12px;width:120px;height:34px;border-radius:20px;background:#000;z-index:20}
+.sb{position:absolute;top:18px;font-size:15px;font-weight:650;z-index:19}
+.brand{position:absolute;left:24px;top:62px;font-size:11px;font-weight:800;letter-spacing:.22em}
+.brand small{display:block;font-size:12px;letter-spacing:.01em;color:var(--muted);font-weight:500;margin-top:3px}
+.avatar{position:absolute;right:22px;top:60px;width:34px;height:34px;border-radius:50%;background:var(--surface);border:1px solid var(--line);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center}
+#h1{position:absolute;left:24px;top:112px;width:342px;font-size:31px;font-weight:650;letter-spacing:-.035em;line-height:1.06}
+#why{position:absolute;left:24px;top:192px;height:34px;padding:0 16px;border-radius:99px;background:#121316;color:#F7F7F5;font-size:13px;font-weight:650;display:flex;align-items:center;gap:7px}
+#card{position:absolute;left:16px;top:240px;width:358px;height:124px;border-radius:28px;background:var(--paper);border:1px solid var(--line);padding:16px;display:flex;gap:16px;align-items:center}
+.ring{position:relative;width:92px;height:92px;flex:none}
+.ring svg{transform:rotate(-90deg)}
+.ringc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ringc b{font-size:28px;letter-spacing:-.04em;line-height:1}
+.ringc span{font-size:8.5px;letter-spacing:.12em;color:var(--muted);font-weight:650;margin-top:3px}
+.metrics{flex:1;display:grid;gap:9px}
+.m{display:grid;grid-template-columns:62px 1fr 52px;gap:8px;align-items:center;font-size:11.5px}
+.m .v{font-weight:650;text-align:right}
+.bar{height:5px;background:var(--surface2);border-radius:9px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--ink);border-radius:9px}
+.lbl{position:absolute;left:24px;font-size:10px;letter-spacing:.13em;color:var(--muted);font-weight:650}
+.item{position:absolute;left:16px;width:358px;height:74px;border-radius:24px;background:var(--paper);border:1px solid var(--line);display:flex;align-items:center;gap:14px;padding:0 16px}
+.item .t{font-weight:650;font-size:14px;letter-spacing:-.02em;width:44px}
+.item .tt{flex:1;font-weight:620;font-size:14px;letter-spacing:-.01em;line-height:1.25}
+.item .tt small{display:block;font-weight:500;color:var(--muted);font-size:11px;margin-top:2px}
+.tag{font-size:8.5px;font-weight:750;letter-spacing:.08em;padding:4px 7px;border-radius:99px;background:var(--surface);color:var(--ink2);white-space:nowrap}
+.tag.dark{background:#121316;color:#F7F7F5}.tag.green{background:var(--good);color:#fff}
+#banner{position:absolute;left:12px;top:10px;width:366px;height:80px;border-radius:30px;background:#121316;color:#F7F7F5;display:flex;align-items:center;gap:12px;padding:0 16px;z-index:21}
+#banner .ic{width:44px;height:44px;border-radius:14px;background:#2a2c31;display:flex;align-items:center;justify-content:center;flex:none}
+#banner b{font-size:14px;letter-spacing:-.01em}
+#banner p{font-size:11.5px;color:rgba(247,247,245,.66);margin-top:2px}
+.ov{position:absolute;inset:0;background:var(--bg);z-index:10}
+.ov h2{position:absolute;left:24px;top:112px;width:342px;font-size:30px;font-weight:650;letter-spacing:-.035em;line-height:1.06}
+.pcard{position:absolute;left:16px;width:358px;border-radius:26px;background:var(--paper);border:1px solid var(--line);padding:18px}
+.pcard .k{font-size:9.5px;letter-spacing:.13em;font-weight:700;color:var(--muted)}
+.pcard h3{font-size:18px;font-weight:650;letter-spacing:-.02em;margin-top:6px}
+.pcard p{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.btn{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 18px;border-radius:99px;background:#121316;color:#F7F7F5;font-size:13px;font-weight:650}
+.btn.ghost{background:var(--paper);color:var(--ink);border:1px solid var(--line)}
+.exr{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:13px;font-weight:600}
+.exr span{color:var(--muted);font-weight:500;font-size:12px}
+.bub{position:absolute;max-width:270px;padding:12px 15px;border-radius:20px;font-size:13px;line-height:1.4}
+.bub.me{right:16px;background:#121316;color:#F7F7F5;border-bottom-right-radius:6px}
+.bub.gl{left:16px;background:var(--paper);border:1px solid var(--line);border-bottom-left-radius:6px}
+#askIn{position:absolute;left:16px;top:772px;width:358px;height:54px;border-radius:27px;background:var(--paper);border:1px solid var(--line-strong,#D4D3CC);display:flex;align-items:center;padding:0 8px 0 18px;font-size:14px}
+#askSend{position:absolute;right:7px;top:7px;width:40px;height:40px;border-radius:50%;background:#121316;display:flex;align-items:center;justify-content:center}
+.sup{position:absolute;width:171px;height:150px;border-radius:24px;background:var(--paper);border:1px solid var(--line);padding:16px}
+.sup .ic{width:40px;height:40px;border-radius:13px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:18px}
+.sup b{display:block;font-size:15px;margin-top:22px;letter-spacing:-.02em}
+.sup span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.fbar{display:grid;grid-template-columns:96px 1fr 58px;gap:8px;align-items:center;font-size:12px;margin-top:10px}
+.fbar .bar{height:8px}
+/* privacy layer */
+#empCard{position:absolute;left:1180px;top:300px;width:560px;border-radius:32px;background:rgba(255,255,255,.9);border:1px solid rgba(18,19,22,.07);box-shadow:0 30px 80px rgba(18,19,22,.12);padding:34px}
+#empCard .k{font-size:13px;letter-spacing:.16em;font-weight:750;color:var(--muted)}
+#empCard .row{display:flex;gap:14px;align-items:center;font-size:24px;font-weight:620;letter-spacing:-.02em;margin-top:22px}
+#empCard .row i{width:30px;height:30px;border-radius:50%;background:#121316;color:#fff;font-style:normal;font-size:16px;display:flex;align-items:center;justify-content:center}
+#divider{position:absolute;left:1060px;top:250px;width:0;height:620px;border-left:3px dashed rgba(18,19,22,.25)}
+#divLbl{position:absolute;left:1060px;top:206px;transform:translateX(-50%);padding:8px 16px;border-radius:99px;background:#121316;color:#F7F7F5;font-size:14px;font-weight:750;letter-spacing:.14em}
+.lock{display:inline-flex;width:30px;height:30px;border-radius:50%;background:#121316;align-items:center;justify-content:center}
+.orb{position:absolute;padding:18px 22px;border-radius:26px;background:rgba(255,255,255,.93);border:1px solid rgba(18,19,22,.07);box-shadow:0 18px 50px rgba(18,19,22,.12);font-size:24px;font-weight:650;letter-spacing:-.02em;display:flex;gap:12px;align-items:center;white-space:nowrap}
+.orb .ic{width:44px;height:44px;border-radius:14px;background:var(--surface);display:flex;align-items:center;justify-content:center}
+/* ---- employer window ---- */
+#win{position:absolute;left:180px;top:116px;width:1560px;height:870px;border-radius:30px;background:var(--bg);border:1px solid rgba(18,19,22,.08);box-shadow:0 50px 140px rgba(18,19,22,.20),0 10px 30px rgba(18,19,22,.08);overflow:hidden}
+#chrome{position:absolute;left:0;top:0;right:0;height:50px;background:rgba(255,255,255,.7);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 22px;gap:8px}
+#chrome i{width:13px;height:13px;border-radius:50%;background:#DADAD5;display:block}
+#chrome span{margin-left:auto;margin-right:auto;font-size:13px;color:var(--muted);font-weight:600;transform:translateX(-30px)}
+#etop{position:absolute;left:56px;top:78px;right:56px;height:56px;display:flex;align-items:center;gap:14px}
+#etop img{width:40px}
+#etop .b{font-size:14px;font-weight:800;letter-spacing:.22em}
+#etop .b small{display:block;font-size:13px;letter-spacing:0;color:var(--muted);font-weight:500;margin-top:3px}
+#etop .priv{margin-left:auto;display:flex;align-items:center;gap:8px;padding:9px 16px;border-radius:99px;background:var(--paper);border:1px solid var(--line);font-size:13px;font-weight:650}
+.page{position:absolute;left:56px;right:56px;top:160px;bottom:110px}
+.page h1{font-size:44px;font-weight:650;letter-spacing:-.04em;line-height:1.05}
+.page .sub{font-size:17px;color:var(--muted);margin-top:8px}
+.g{position:absolute;background:var(--paper);border:1px solid var(--line);border-radius:28px;padding:26px}
+.g .k{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--muted)}
+.st{display:inline-block;font-size:11px;font-weight:750;letter-spacing:.08em;padding:5px 10px;border-radius:99px;background:var(--surface);color:var(--ink2)}
+.st.watch{background:#F6E9C9;color:#7a5410}.st.stable{background:#E3F0E7;color:#245f3c}.st.dark{background:#121316;color:#F7F7F5}.st.green{background:var(--good);color:#fff}
+.team h3{font-size:24px;font-weight:650;letter-spacing:-.03em}
+.avs{display:flex;margin-top:14px}
+.avs b{width:34px;height:34px;border-radius:50%;border:2px solid var(--paper);margin-left:-8px;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--ink2)}
+.avs b:first-child{margin-left:0}
+.dim{display:grid;grid-template-columns:170px 1fr 44px;gap:12px;align-items:center;font-size:15px;margin-top:14px}
+.dim .bar{height:7px}
+.sig{display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-top:1px solid var(--line);font-size:17px;font-weight:600}
+#edock{position:absolute;left:50%;bottom:28px;transform:translateX(-50%);height:58px;border-radius:99px;background:rgba(255,255,255,.8);border:1px solid rgba(18,19,22,.08);box-shadow:0 10px 30px rgba(18,19,22,.08);display:flex;align-items:center;padding:0 6px;gap:4px}
+#edock span{position:relative;z-index:2;padding:0 22px;height:46px;display:flex;align-items:center;font-size:15px;font-weight:650;border-radius:99px}
+#edHi{position:absolute;top:6px;height:46px;border-radius:99px;background:#121316;z-index:1}
+.ech{position:absolute;top:0;padding:20px 24px;border-radius:24px;background:#fff;border:1px solid var(--line);box-shadow:0 12px 30px rgba(18,19,22,.07);white-space:nowrap}
+.ech .k{font-size:11px;letter-spacing:.14em;font-weight:700;color:var(--muted)}
+.ech .v{font-size:24px;font-weight:650;letter-spacing:-.03em;margin-top:4px}
+.badge{position:absolute;display:flex;gap:12px;align-items:center;padding:16px 22px;border-radius:22px;background:#121316;color:#F7F7F5;font-size:20px;font-weight:650;white-space:nowrap;box-shadow:0 18px 40px rgba(18,19,22,.25)}
+.prog .bar{height:9px;margin-top:10px}
+/* close */
+.bigline{position:absolute;left:0;width:1920px;text-align:center;font-size:120px;font-weight:700;letter-spacing:-.05em;line-height:1}
+#endtag{position:absolute;left:0;width:1920px;text-align:center;font-size:32px;font-weight:500;color:var(--muted);letter-spacing:-.01em}
+</style></head>
+<body>
+<div id="stage">
+ <div id="grad">
+  <div class="b" style="left:2%;top:40%;width:900px;height:900px;background:#F2C879"></div>
+  <div class="b" style="left:35%;top:-20%;width:1000px;height:800px;background:#EAB9A2"></div>
+  <div class="b" style="left:62%;top:30%;width:1000px;height:1000px;background:#C9C3EE"></div>
+  <div class="b" style="left:30%;top:70%;width:800px;height:600px;background:#F6E6C8"></div>
+ </div>
+
+ <!-- ACT 1 -->
+ <div class="layer" id="A1">
+  <div id="grid"></div>
+  <div class="cap" id="a1cap" style="left:0;width:1920px;text-align:center;top:150px;font-size:58px"></div>
+  <div class="word" id="w0">Sleep.</div><div class="word" id="w1">Workload.</div><div class="word" id="w2">Meetings.</div><div class="word" id="w3">Pressure.</div>
+  <div class="cap" id="w4" style="left:0;width:1920px;text-align:center;top:620px;font-size:44px;font-weight:550;color:var(--muted)">It all shows up at work.</div>
+  <div class="tile" id="crest1"><img src="crest_ink.png"></div>
+  <div class="abs" id="meet"><span id="meetHi" style="display:block;font-size:34px;font-weight:550;letter-spacing:-.02em;color:var(--muted);margin-bottom:16px">Meet</span><span class="wm" id="meetWm"></span></div>
+  <span class="wm" id="wmMeasure" style="position:absolute;left:-9999px;visibility:hidden">GLYTH WORKPLACE</span>
+ </div>
+
+ <!-- PHONE (acts 2–4) -->
+ <div class="cam" id="camP">
+  <div id="phone" class="abs"><div id="screen">
+   <div id="island"></div>
+   <div class="sb" style="left:42px">9:41</div>
+   <div class="sb" style="right:34px;display:flex;gap:5px;align-items:center"><span style="width:17px;height:10px;border-radius:2px;background:#121316;display:inline-block"></span><span style="width:24px;height:11px;border-radius:3px;border:1.5px solid #121316;display:inline-block;position:relative"><i style="position:absolute;left:1px;top:1px;bottom:1px;width:15px;background:#121316;border-radius:1px"></i></span></div>
+   <div class="brand">GLYTH WORKPLACE<small>Wednesday 4 November</small></div>
+   <div class="avatar">A</div>
+   <div id="h1"></div>
+   <div id="why">Why? <span style="opacity:.6">→</span></div>
+   <div id="card">
+    <div class="ring"><svg width="92" height="92"><circle cx="46" cy="46" r="39" fill="none" stroke="#E6E6E4" stroke-width="8"/><circle id="ringv" cx="46" cy="46" r="39" fill="none" stroke="#121316" stroke-width="8" stroke-linecap="round" stroke-dasharray="245"/></svg><div class="ringc"><b id="ringn">72</b><span>READINESS</span></div></div>
+    <div class="metrics">
+     <div class="m"><span>Sleep</span><div class="bar"><i id="b0"></i></div><span class="v" id="v0"></span></div>
+     <div class="m"><span>Recovery</span><div class="bar"><i id="b1"></i></div><span class="v" id="v1"></span></div>
+     <div class="m"><span>Energy</span><div class="bar"><i id="b2"></i></div><span class="v" id="v2"></span></div>
+    </div>
+   </div>
+   <div class="lbl" style="top:382px">TODAY'S PLAN</div>
+   <div class="item" id="i0"><span class="t" id="i0t">07:00</span><span class="tt" id="i0tt"></span><span class="tag" id="i0g">PLANNED</span></div>
+   <div class="item" id="i1"><span class="t">10:00</span><span class="tt">Deep work<small>Product roadmap · 2 h</small></span><span class="tag" id="i1g">PLANNED</span></div>
+   <div class="item" id="i2"><span class="t">13:15</span><span class="tt">Recovery break<small>20 min walk, no screens</small></span><span class="tag green">ADDED</span></div>
+   <div class="item" id="i3"><span class="t">14:00</span><span class="tt">Investor meeting<small>Series A · critical</small></span><span class="tag" id="i3g">FIXED</span></div>
+   <div class="item" id="i4"><span class="t" id="i4t">16:30</span><span class="tt" id="i4tt"></span><span class="tag" id="i4g">PLANNED</span></div>
+   <div id="banner"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="#F2C879"/></svg></div><div><b>Sleep · 4h 42m</b><p>2h 33m below your baseline · 3rd short night</p></div></div>
+
+   <!-- Ask Glyth -->
+   <div class="ov" id="ask">
+    <div class="brand">ASK GLYTH<small>About your day</small></div>
+    <div class="bub gl" id="askHello" style="top:120px">Hi Alex. Your readiness is 45 today, so I've eased your plan. Ask me anything.</div>
+    <div class="bub me" id="askMe" style="top:228px">What if I keep my workout?</div>
+    <div class="bub gl" id="askDots" style="top:300px;width:64px;text-align:center;letter-spacing:3px">•••</div>
+    <div class="bub gl" id="askRe" style="top:300px">On 4h 42m of sleep, heavy strength raises fatigue risk before your 14:00 meeting. I can keep it at a lighter volume.</div>
+    <div class="pcard" id="prop" style="top:420px">
+     <div class="k">PROPOSED CHANGE</div><h3>Keep strength · reduced volume</h3><p>08:00 · 35 min · 2 working sets per exercise</p>
+     <div style="display:flex;gap:8px;margin-top:14px"><span class="btn ghost" style="flex:1">Not now</span><span class="btn" id="confirmBtn" style="flex:1">Confirm</span></div>
+    </div>
+    <div id="askIn"><span id="askTxt" style="color:var(--muted)">Ask about your day…</span><div id="askSend"><svg width="18" height="18" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" stroke="#fff" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round" id="sendArrow"/></svg></div></div>
+   </div>
+
+   <!-- Support hub -->
+   <div class="ov" id="mSup">
+    <div class="brand">GLYTH WORKPLACE<small>Support</small></div><div class="avatar">A</div>
+    <h2>Your wellbeing,<br>all in one place.</h2>
+    <div class="sup" id="supFit" style="left:16px;top:210px"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 10v4M6 7v10M18 7v10M21 10v4M6 12h12" stroke="#121316" stroke-width="2.2" stroke-linecap="round"/></svg></div><b>Fitness</b><span>Adapts to recovery</span></div>
+    <div class="sup" style="left:203px;top:210px"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" stroke="#121316" stroke-width="2.2" fill="none"/><circle cx="12" cy="12" r="2.5" fill="#121316"/></svg></div><b>Mindfulness</b><span>Right session, right now</span></div>
+    <div class="sup" style="left:16px;top:374px"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><circle cx="9" cy="9" r="3.2" stroke="#121316" stroke-width="2.2" fill="none"/><circle cx="16.5" cy="10" r="2.6" stroke="#121316" stroke-width="2.2" fill="none"/><path d="M3.5 19c.8-3.2 3-4.8 5.5-4.8s4.7 1.6 5.5 4.8M14.5 15.2c2.6-.3 4.8 1 5.6 3.8" stroke="#121316" stroke-width="2.2" fill="none" stroke-linecap="round"/></svg></div><b>Family</b><span>Stay connected</span></div>
+    <div class="sup" style="left:203px;top:374px"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3" stroke="#121316" stroke-width="2.2" fill="none"/><path d="M3 10h18" stroke="#121316" stroke-width="2.2"/></svg></div><b>Finance</b><span>Financial clarity</span></div>
+    <div class="pcard" style="top:540px"><div class="k">PROGRESS THIS WEEK</div><h3>3 recovery days protected</h3><p>2 mindfulness sessions · 1 family check-in</p></div>
+   </div>
+
+   <!-- Fitness -->
+   <div class="ov" id="mFit">
+    <div class="brand">FITNESS<small>Today's training</small></div><div class="avatar">A</div>
+    <h2>Today's training,<br>adapted.</h2>
+    <div class="pcard" style="top:200px"><div style="display:flex;justify-content:space-between;align-items:center"><div class="k">ADAPTED TO RECOVERY 43%</div><span class="tag dark">MODIFIED</span></div><h3>Recovery strength</h3><p>30 min · reduced volume · lower intensity</p>
+     <div style="margin-top:12px"><div class="exr">Goblet Squat<span>2 × 8 · light</span></div><div class="exr">Chest-Supported Row<span>2 × 10</span></div><div class="exr">Dead Bug<span>2 × 10</span></div><div class="exr">90/90 Hip Flow<span>3 min</span></div><div class="exr">Incline Walk<span>10 min · easy</span></div></div></div>
+    <div style="position:absolute;left:16px;right:16px;top:600px;display:flex"><span class="btn" style="flex:1;height:52px;font-size:15px">Start session</span></div>
+   </div>
+
+   <!-- Mindfulness -->
+   <div class="ov" id="mMind">
+    <div class="brand">MINDFULNESS<small>Recommended for now</small></div><div class="avatar">A</div>
+    <h2>A reset before<br>your 14:00.</h2>
+    <div class="pcard" style="top:200px;height:420px;overflow:hidden;padding:0">
+     <div id="breath" style="position:absolute;left:50%;top:150px;width:200px;height:200px;margin:-100px 0 0 -100px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#F6E6C8,#EAB9A2 55%,#C9C3EE)"></div>
+     <div id="breathTxt" style="position:absolute;left:0;right:0;top:142px;text-align:center;font-size:14px;font-weight:650;color:#121316">Breathe in</div>
+     <div style="position:absolute;left:20px;right:20px;bottom:22px"><div class="k" style="font-size:9.5px;letter-spacing:.13em;font-weight:700;color:var(--muted)">PRE-MEETING RESET</div><h3 style="font-size:20px;margin-top:6px">5 minutes · guided</h3><p style="font-size:12.5px;color:var(--muted);margin-top:4px">Chosen because sleep was short and a high-pressure meeting is next.</p></div>
+    </div>
+    <div style="position:absolute;left:16px;right:16px;top:640px;display:flex;gap:8px"><span class="btn ghost" style="flex:1;padding:0 6px;font-size:12px">Less settled</span><span class="btn ghost" style="flex:1;padding:0 6px;font-size:12px">Same</span><span class="btn" style="flex:1;padding:0 6px;font-size:12px">More settled</span></div>
+   </div>
+
+   <!-- Family -->
+   <div class="ov" id="mFam">
+    <div class="brand">FAMILY<small>Private to you</small></div><div class="avatar">A</div>
+    <h2>Who needs your<br>attention?</h2>
+    <div class="pcard" style="top:200px"><div style="display:flex;justify-content:space-between"><div class="k">REACH OUT</div><span class="tag" style="background:#F6E9C9;color:#7a5410">TIME TO CHECK IN</span></div><h3>Check in with Mum</h3><p>You usually speak every 7 days. Your last contact was 11 days ago.</p><p style="color:var(--ink2);margin-top:10px">“Ask how the garden's coming along.”</p><div style="margin-top:14px"><span class="btn" style="width:100%">Send a message</span></div></div>
+    <div class="pcard" style="top:470px"><div class="k">IMPORTANT DATE</div><h3>Sam's birthday · in 6 days</h3><p>Gift ideas: Books, Experiences · £25–£50</p></div>
+   </div>
+
+   <!-- Finance -->
+   <div class="ov" id="mFin">
+    <div class="brand">FINANCE<small>Private to you</small></div><div class="avatar">A</div>
+    <h2>Where your money<br>actually goes.</h2>
+    <div class="pcard" style="top:200px"><div class="k">OCTOBER</div><h3 style="font-size:30px;letter-spacing:-.04em">£2,340 spent</h3><p>£180 less than September</p>
+     <div style="margin-top:10px" id="finBars">
+      <div class="fbar"><span>Housing</span><div class="bar"><i data-w="88"></i></div><b style="text-align:right">£1,150</b></div>
+      <div class="fbar"><span>Groceries</span><div class="bar"><i data-w="34"></i></div><b style="text-align:right">£410</b></div>
+      <div class="fbar"><span>Dining</span><div class="bar"><i data-w="22"></i></div><b style="text-align:right">£265</b></div>
+      <div class="fbar"><span>Transport</span><div class="bar"><i data-w="15"></i></div><b style="text-align:right">£180</b></div>
+      <div class="fbar"><span>Subscriptions</span><div class="bar"><i data-w="8"></i></div><b style="text-align:right">£84</b></div>
+     </div></div>
+    <div class="pcard" style="top:520px"><div class="k">GLYTH NOTICED</div><h3>6 recurring subscriptions</h3><p>£84 a month · 2 you haven't used since August.</p></div>
+   </div>
+  </div></div>
+
+  <!-- act2 chain chips -->
+  <div class="chip" id="c0"><div class="k">OBSERVED</div><div class="v">Sleep 4h 42m ↓</div></div>
+  <div class="chip" id="c1"><div class="k">OBSERVED</div><div class="v">Recovery 43% ↓</div></div>
+  <div class="chip" id="c2"><div class="k">INFERRED</div><div class="v">Training capacity ↓</div></div>
+  <div class="chip" id="c3"><div class="k">INFERRED</div><div class="v">Attention risk ↑</div></div>
+  <div class="chip small" id="x0"><div class="k">BASELINE</div><div class="v">7h 15m usual sleep</div></div>
+  <div class="chip small" id="x1"><div class="k">RECENT</div><div class="v">3rd short night</div></div>
+  <div class="chip small" id="x2"><div class="k">RECENT</div><div class="v">Hard training yesterday</div></div>
+  <div class="chip small" id="x3"><div class="k">MATTERS TODAY</div><div class="v">14:00 Investor meeting</div></div>
+  <div class="chip small" id="x4"><div class="k">MATTERS TODAY</div><div class="v">Deep work 10:00–12:00</div></div>
+  <div class="arrow" id="ar0"></div><div class="arrow" id="ar1"></div><div class="arrow" id="ar2"></div>
+  <svg class="cursor" id="curP" viewBox="0 0 24 24"><path d="M4 3l15 7.2-6.4 1.8L9.8 18.5z" fill="#121316" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div class="ripple" id="ripP"></div>
+ </div>
+
+ <!-- privacy fx (act 3) -->
+ <div class="layer" id="A3">
+  <div id="divider"></div><div id="divLbl">NEVER SHARED</div>
+  <div id="empCard"><div class="k">YOUR EMPLOYER SEES</div>
+   <div class="row"><i>✓</i>Team-level patterns</div><div class="row"><i>✓</i>Groups of 5 or more</div><div class="row" style="color:var(--muted)"><i style="background:var(--surface2);color:var(--muted)">✕</i>Never individuals</div>
+   <div id="aggIn" style="margin-top:26px;padding:14px 18px;border-radius:18px;background:var(--newbg);border:1px solid var(--newb);font-size:19px;font-weight:650;opacity:0">Work patterns · aggregated</div>
+  </div>
+  <div id="privChips"></div>
+  <div class="orb" id="aggChip" style="opacity:0;font-size:21px">Work patterns · aggregated</div>
+ </div>
+
+ <!-- whole-person orbit (act 4) -->
+ <div class="layer" id="A4"></div>
+
+ <!-- ACT 5 employer -->
+ <div class="layer" id="A5"><div class="cam" id="camE">
+  <div id="win">
+   <div id="chrome"><i></i><i></i><i></i><span>Glyth Workplace — Employer</span></div>
+   <div id="etop"><img src="crest_ink.png"><div class="b">GLYTH WORKPLACE<small>Northstar · Owner</small></div><div class="priv"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="#121316"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="#121316" stroke-width="2.4" fill="none"/></svg>Aggregates only · individual data never shown</div></div>
+
+   <div class="page" id="pOv">
+    <h1>How is Northstar doing?</h1><div class="sub">Privacy-safe state across 4 teams · updated this morning</div>
+    <div class="g" style="left:0;top:110px;width:680px;height:300px">
+     <div class="k">ORGANISATION STATE</div>
+     <div style="display:flex;gap:26px;align-items:center;margin-top:16px">
+      <div class="ring" style="width:120px;height:120px"><svg width="120" height="120"><circle cx="60" cy="60" r="51" fill="none" stroke="#E6E6E4" stroke-width="10"/><circle id="ovRing" cx="60" cy="60" r="51" fill="none" stroke="#121316" stroke-width="10" stroke-linecap="round" stroke-dasharray="320.4"/></svg><div class="ringc"><b id="ovN" style="font-size:34px">82%</b><span>CAPACITY</span></div></div>
+      <div style="flex:1"><div style="font-size:22px;font-weight:650;letter-spacing:-.02em">82% within normal capacity <span class="st watch" style="vertical-align:3px;margin-left:6px">WATCH</span></div>
+       <div class="dim"><span>Workload pressure</span><div class="bar"><i class="ovb" data-w="64"></i></div><b>64</b></div>
+       <div class="dim"><span>Engagement</span><div class="bar"><i class="ovb" data-w="71"></i></div><b>71</b></div>
+       <div class="dim"><span>Focus protection</span><div class="bar"><i class="ovb" data-w="58"></i></div><b>58</b></div></div>
+     </div>
+    </div>
+    <div class="g" style="left:710px;top:110px;width:738px;height:300px"><div class="k">WHAT GLYTH IS NOTICING</div>
+     <div style="margin-top:10px"><div class="sig" style="border-top:0">Meeting density rising in Product<span class="st watch">WATCH</span></div><div class="sig">Focus fragmentation up 12%<span class="st watch">WATCH</span></div><div class="sig">Operations capacity stable<span class="st stable">STABLE</span></div></div></div>
+    <div id="teamRow"></div>
+   </div>
+
+   <div class="page" id="pIns">
+    <div class="k" style="font-size:12px;letter-spacing:.14em;font-weight:700;color:var(--muted)">KEY INSIGHT · PRODUCT &amp; ENGINEERING</div>
+    <h1 style="margin-top:10px;width:1100px">Meeting density is beginning to affect focus capacity.</h1>
+    <div id="eChain" style="position:absolute;left:0;top:160px;width:1448px;height:110px"></div>
+    <div class="g" id="iCard" style="left:0;top:310px;width:860px;height:240px">
+     <div style="display:flex;justify-content:space-between;align-items:center"><div class="k">SUGGESTED RESPONSE</div><span class="st" id="iSt">PROPOSED</span></div>
+     <div style="font-size:30px;font-weight:650;letter-spacing:-.03em;margin-top:12px">Protect a focus window</div>
+     <div style="font-size:17px;color:var(--muted);margin-top:6px">Product · 10:00–12:00, Tue–Thu · no recurring meetings</div>
+     <div style="display:flex;gap:10px;margin-top:24px"><span class="btn ghost" style="height:48px;padding:0 26px;font-size:15px">Dismiss</span><span class="btn" id="apBtn" style="height:48px;padding:0 30px;font-size:15px">Approve</span></div>
+    </div>
+    <div class="g" id="oCard" style="left:890px;top:310px;width:558px;height:240px">
+     <div class="k">OUTCOME · PRODUCT TEAM</div>
+     <div style="display:flex;align-items:baseline;gap:14px;margin-top:10px"><b id="oNum" style="font-size:76px;letter-spacing:-.05em;line-height:1">31%</b><span style="font-size:17px;color:var(--muted)">focus fragmentation</span></div>
+     <svg width="500" height="70" style="margin-top:12px"><polyline id="spark" fill="none" stroke="#121316" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="0,14 70,10 140,18 210,26 280,40 350,48 420,56 500,60"/></svg>
+     <div style="font-size:12px;color:var(--faint);margin-top:2px">Illustrative demo data</div>
+    </div>
+   </div>
+
+   <div class="page" id="pProg">
+    <h1>Programmes that change the pattern.</h1><div class="sub">Longer-running initiatives, measured in aggregate</div>
+    <div id="progRow"></div>
+   </div>
+
+   <div class="page" id="pTeams">
+    <h1>Teams, in aggregate.</h1><div class="sub">Individual data is never shown to employers.</div>
+    <div id="teamRow2"></div>
+   </div>
+
+   <div id="edock"><div id="edHi"></div><span id="ed0">Overview</span><span id="ed1">Teams</span><span id="ed2">Insights</span><span id="ed3">Programmes</span></div>
+  </div>
+  <svg class="cursor" id="curE" viewBox="0 0 24 24"><path d="M4 3l15 7.2-6.4 1.8L9.8 18.5z" fill="#121316" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  <div class="ripple" id="ripE"></div>
+  <div class="badge" id="bd0"><span class="lock" style="background:#fff"><svg width="14" height="14" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="#121316"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="#121316" stroke-width="2.4" fill="none"/></svg></span>Aggregates only</div>
+  <div class="badge" id="bd1"><span class="lock" style="background:#fff;color:#121316;font-size:14px;font-weight:800">5+</span>Minimum group size</div>
+  <div class="badge" id="bd2"><span class="lock" style="background:#fff;color:#121316;font-size:15px;font-weight:800">✕</span>No individual data</div>
+ </div></div>
+
+ <!-- ACT 6 -->
+ <div class="layer" id="A6">
+  <div class="bigline" id="hp" style="top:400px">Healthier people.</div>
+  <div class="bigline" id="bw" style="top:540px">Better work.</div>
+  <div class="tile" id="crest6"><img src="crest_ink.png"></div>
+  <div class="wm abs" id="endWm"></div>
+  <div id="endtag">Wellbeing that works with your workday.</div>
+ </div>
+
+ <!-- overlays -->
+ <div class="pill" id="chap"></div>
+ <div class="cap" id="cap" style="left:140px;width:560px"></div>
+ <div class="cap" id="capTop" style="left:0;width:1920px;text-align:center;font-size:54px"></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+const p=(t,a,b)=>cl((t-a)/(b-a));
+const eo=x=>1-Math.pow(1-x,4);
+const eio=x=>x<.5?8*x*x*x*x:1-Math.pow(-2*x+2,4)/2;
+const back=x=>{const c=1.6;return 1+(c+1)*Math.pow(x-1,3)+c*Math.pow(x-1,2)};
+const L=(a,b,x)=>a+(b-a)*x;
+const set=(el,o)=>{el=typeof el==='string'?$(el):el;for(const k in o)el.style[k]=o[k];};
+const _c={}; const html=(id,s)=>{ if(_c[id]!==s){ $(id).innerHTML=s; _c[id]=s; } };
+const typed=(s,t,a,cps=14)=>s.slice(0,Math.max(0,Math.floor((t-a)*cps)));
+const win=(t,a,b,fi=.5,fo=.5)=>eo(p(t,a,a+fi))*(1-eio(p(t,b-fo,b)));   // in/out envelope
+let seed=7; const rnd=()=>{ seed=(seed*16807)%2147483647; return (seed-1)/2147483646; };
+
+// ===== KEY TIMES (synced to the v2 voiceover) =====
+const K={
+  avg:.5, nobody:4.5, wSleep:7.5, wWork:8.2, wMeet:9.08, wPress:10.06, atWork:11.23, meet:13.36, a1end:15.4,
+  phoneIn:15.4, grad:16.6, onTrack:23.5, strength:25.4, deep:27.0, meeting:28.2, tourEnd:30.2,
+  life:32.0, banner:33.4, third:36.86, bannerOut:39.2, eval:40.4, replans:43.4,
+  replace:47.0, protect:50.5, add:53.0, defer:57.0, fixed:59.06, changed:61.3, why:63.3, chain:64.0, chainEnd:69.6,
+  ask:69.9, askAny:71.62, send:73.2, confirm:74.6, privacy:78.4, pSleep:83.5, pHealth:84.15, pConv:84.75, agg:86.1, a3end:88.0,
+  more:88.3, fit:92.4, mind:96.9, fam:101.9, fin:107.4, whole:113.4, a4end:118.4,
+  emp:118.6, teams:126.5, byTeam:129.44, insight:133.0, act:140.0, approve:142.6, changedE:143.8, outcome:146.0, count:148.34,
+  prog:153.0, priv:159.0, small:161.06, never:162.89, a5end:167.6,
+  hp:168.5, bw:170.17, endWm:172.29, tag:174.26, END:180
+};
+
+// ---------- build dynamic DOM ----------
+(function build(){
+  // act1 grid 6x4
+  const g=$('grid'); window.__cards=[];
+  for(let r=0;r<4;r++)for(let c=0;c<6;c++){
+    const d=document.createElement('div'); d.className='dcard';
+    d.innerHTML='<div class="av"></div><div class="nm"></div><div class="nm2"></div><div class="trk"></div>';
+    const trk=d.querySelector('.trk'); const blks=[];
+    const base=[[.04,.18],[.28,.52],[.6,.72],[.8,.94]];
+    for(let i=0;i<4;i++){ const b=document.createElement('div'); b.className='blk'; trk.appendChild(b);
+      const s=rnd()*.82, w=.06+rnd()*.22; const cols=['#F2C879','#EAB9A2','#C9C3EE','#CFCDC6','#121316'];
+      blks.push({el:b,base:base[i],uni:[s,Math.min(.98,s+w)],col:cols[Math.floor(rnd()*cols.length)]}); }
+    const avc=['#F2C879','#EAB9A2','#C9C3EE','#B9D7C3','#E6E6E4'][Math.floor(rnd()*5)];
+    g.appendChild(d); __cards.push({el:d,r,c,blks,av:d.querySelector('.av'),avc,jit:rnd()});
+  }
+  // employer team cards
+  const teams=[['Product',14,'watch','WATCH','Meeting density ↑',['PM','JL','SK','AR','+10']],['Engineering',16,'watch','WATCH','Focus fragmentation ↑',['DV','MO','TC','NB','+12']],['Operations',11,'stable','STABLE','Capacity steady',['RH','EW','KP','+8']],['People',3,'','PRIVATE',null,['LS','AF','GN']]];
+  const avcol=['#F6E6C8','#EAD9F2','#DCEBE1','#F2DCD2','#E6E6E4'];
+  const mk=(id,top,w,h,big)=>{ const row=$(id); teams.forEach((tm,i)=>{ const d=document.createElement('div'); d.className='g team'; d.id=id+'_'+i;
+    d.style.cssText=`left:${i*(w+22)}px;top:${top}px;width:${w}px;height:${h}px`;
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><h3>${tm[0]}</h3><span class="st ${tm[2]}">${tm[3]}</span></div><div style="font-size:14px;color:var(--muted);margin-top:4px">${tm[1]} members</div><div class="avs">${tm[5].map((a,j)=>`<b style="background:${avcol[j%5]}">${a}</b>`).join('')}</div>`+
+      (tm[4]?`<div style="font-size:16px;font-weight:600;margin-top:${big?40:16}px">${tm[4]}</div>${big?'<div class="dim" style="grid-template-columns:120px 1fr 40px"><span>Capacity</span><div class="bar"><i style="width:'+(i==2?81:68)+'%"></i></div><b>'+(i==2?81:68)+'</b></div>':''}`:`<div style="font-size:${big?17:15}px;color:var(--muted);margin-top:${big?40:16}px;line-height:1.35;display:flex;gap:10px"><span class="lock" style="width:26px;height:26px;flex:none"><svg width="12" height="12" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="#fff"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="#fff" stroke-width="2.6" fill="none"/></svg></span>Not enough data to show this insight privately.</div>`);
+    row.appendChild(d); }); };
+  mk('teamRow',440,344,200,false); mk('teamRow2',130,344,330,true);
+  // employer chain
+  const ec=[['OBSERVED','Meeting density ↑'],['OBSERVED','Focus fragmentation ↑'],['INFERRED','Deep work availability ↓'],['INFERRED','Delivery pressure ↑']];
+  const ech=$('eChain'); ec.forEach((c,i)=>{ const d=document.createElement('div'); d.className='ech'; d.id='ec'+i; d.innerHTML=`<div class="k">${c[0]}</div><div class="v">${c[1]}</div>`; ech.appendChild(d); if(i<3){ const a=document.createElement('div'); a.className='arrow'; a.id='ea'+i; ech.appendChild(a);} });
+  // programmes
+  const pr=[['Focus Protection Programme','ACTIVE','dark','Product · Engineering',64,'2 linked interventions · focus fragmentation ↓'],['Meeting Hygiene Programme','ACTIVE','dark','Product · Engineering · Operations',40,'Recurring meetings reviewed · 18 removed'],['Sustainable Workload Programme','PLANNED','','Operations',0,'Starts next month · goal: workload pressure ↓']];
+  pr.forEach((x,i)=>{ const d=document.createElement('div'); d.className='g prog'; d.id='pg'+i; d.style.cssText=`left:${i*(468+22)}px;top:120px;width:468px;height:400px`;
+    d.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><div class="k">PROGRAMME</div><span class="st ${x[2]}">${x[1]}</span></div><div style="font-size:28px;font-weight:650;letter-spacing:-.03em;margin-top:14px;line-height:1.1">${x[0]}</div><div style="font-size:15px;color:var(--muted);margin-top:10px">${x[3]}</div><div style="margin-top:60px;display:flex;justify-content:space-between;font-size:14px;font-weight:650"><span>Progress</span><span class="pgv">0%</span></div><div class="bar"><i class="pgb" data-w="${x[4]}" style="width:0"></i></div><div style="font-size:15px;color:var(--ink2);margin-top:26px;line-height:1.4">${x[5]}</div><div style="font-size:12px;color:var(--faint);margin-top:18px">Illustrative demo data</div>`;
+    $('progRow').appendChild(d); });
+  // privacy chips
+  const pc=['Sleep','Health','Conversations','Family','Finances'];
+  pc.forEach((n,i)=>{ const d=document.createElement('div'); d.className='orb'; d.id='pc'+i; d.innerHTML=`<span class="lock"><svg width="13" height="13" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="10" rx="2.5" fill="#fff"/><path d="M8 10V7.5a4 4 0 0 1 8 0V10" stroke="#fff" stroke-width="2.6" fill="none"/></svg></span>${n}`; $('privChips').appendChild(d); });
+  // orbit tiles act4
+  const ot=[['Fitness','Adapts to recovery'],['Mindfulness','The right reset'],['Family','Stay connected'],['Finance','Financial clarity']];
+  const icons=[$('mSup').querySelectorAll('.sup .ic')];
+  ot.forEach((o,i)=>{ const d=document.createElement('div'); d.className='orb'; d.id='ot'+i; d.innerHTML=`<span class="ic">${$('mSup').querySelectorAll('.sup .ic')[i].innerHTML}</span><span>${o[0]}<span style="display:block;font-size:15px;color:var(--muted);font-weight:500;margin-top:2px">${o[1]}</span></span>`; $('A4').appendChild(d); });
+})();
+
+function cursor(cur,rip,t,x,y,op,clickAt){
+  let s=1; if(clickAt!=null){ s=1-.18*Math.sin(Math.PI*p(t,clickAt-.1,clickAt+.15)); const rp=p(t,clickAt,clickAt+.5); set(rip,{left:(x-30)+'px',top:(y-30)+'px',opacity:(rp>0&&rp<1)?(1-rp)*.5:0,transform:`scale(${L(.3,1.6,eo(rp))})`}); } else set(rip,{opacity:0});
+  set(cur,{opacity:op,transform:`translate(${x-4}px,${y-3}px) scale(${s})`});
+}
+function camera(el,t,segs){ let ws=0,sc=0,fx=0,fy=0; for(const g of segs){ const w=eio(p(t,g[0],g[1]))*(1-eio(p(t,g[2],g[3]))); if(w<=0) continue; const f=typeof g[5]==='function'?g[5](t):g[5]; ws+=w; sc+=w*(g[4]-1); fx+=w*f[0]; fy+=w*f[1]; }
+  let X=960,Y=540; if(ws>0){ const m=Math.min(1,ws); X=L(960,fx/ws,m); Y=L(540,fy/ws,m); }
+  el.style.transform=`translate(960px,540px) scale(${1+sc}) translate(${-X}px,${-Y}px)`; return 1+sc; }
+const WMW=()=>window.__wm||(window.__wm=$('wmMeasure').offsetWidth);
+
+function render(t){
+  // ---------------- global gradient ----------------
+  const gOn=eio(p(t,K.grad,K.grad+1.6))*(1-eio(p(t,K.a5end-.4,K.hp-.2)));
+  set('grad',{opacity:gOn,clipPath:t<K.grad+1.9?`circle(${L(0,150,eio(p(t,K.grad,K.grad+1.9)))}% at 0% 100%)`:'none'});
+
+  // ================= ACT 1 =================
+  const a1=t<K.a1end+.2; set('A1',{display:a1?'block':'none'});
+  if(a1){
+    const gridOut=eio(p(t,K.wSleep-.4,K.wSleep+.3));
+    const uni=eio(p(t,K.nobody-.1,K.nobody+1.4));
+    for(const cd of __cards){
+      const x=240+cd.c*(220+24), y=300+cd.r*(118+24);
+      const a=eo(p(t,K.avg-.2+cd.c*.06+cd.r*.08,K.avg+.5+cd.c*.06+cd.r*.08));
+      const jx=(cd.c-2.5)*60*gridOut, jy=(cd.r-1.5)*50*gridOut;
+      set(cd.el,{left:x+'px',top:y+'px',opacity:a*(1-gridOut),transform:`translate(${jx}px,${(1-a)*24+jy}px) scale(${L(.96,1,a)*L(1,.85,gridOut)}) rotate(${(cd.jit-.5)*6*uni}deg)`});
+      const d=p(t,K.nobody-.1+cd.jit*.6,K.nobody+.9+cd.jit*.6), e=eio(d);
+      for(const b of cd.blks){ const s=L(b.base[0],b.uni[0],e), f=L(b.base[1],b.uni[1],e); set(b.el,{left:(s*100)+'%',width:((f-s)*100)+'%',background:e>.5?b.col:'#CFCDC6'}); }
+      set(cd.av,{background:e>.5?cd.avc:'var(--surface2)'});
+    }
+    const c1=win(t,K.avg+.2,K.nobody-.1,.6,.4), c2=win(t,K.nobody+.1,K.wSleep-.3,.5,.4);
+    html('a1cap', t<K.nobody?'Built for an average employee.':'Nobody has an average day.');
+    set('a1cap',{opacity:Math.max(c1,c2),transform:`translateY(${L(16,0,eo(p(t,t<K.nobody?K.avg+.2:K.nobody+.1,(t<K.nobody?K.avg+.2:K.nobody+.1)+.6)))}px)`});
+    // words
+    if(!window.__ww){ window.__ww=[0,1,2,3].map(i=>$('w'+i).offsetWidth); }
+    const gap=56, tot=__ww.reduce((a,b)=>a+b,0)+gap*3; let xx=960-tot/2;
+    const wt=[K.wSleep,K.wWork,K.wMeet,K.wPress], wout=eio(p(t,K.meet-.9,K.meet-.4));
+    [0,1,2,3].forEach(i=>{ const a=back(p(t,wt[i],wt[i]+.45)); set('w'+i,{left:xx+'px',opacity:cl(p(t,wt[i],wt[i]+.25))*(1-wout),transform:`translateY(${L(40,0,cl(a))}px) scale(${L(.85,1,cl(a))})`}); xx+=__ww[i]+gap; });
+    set('w4',{opacity:eo(p(t,K.atWork,K.atWork+.5))*(1-wout),transform:`translateY(${L(14,0,eo(p(t,K.atWork,K.atWork+.5)))}px)`});
+    // crest + meet
+    const pop=back(p(t,K.meet-.35,K.meet+.2)); const mv=eio(p(t,K.meet+.25,K.meet+.8));
+    const S2=1.3, tot2=110*S2+40+WMW(), gx2=960-tot2/2+55*S2; const gx=L(960,gx2,mv);
+    const out=eio(p(t,K.a1end-.6,K.a1end));
+    set('crest1',{left:(gx-55)+'px',top:'485px',opacity:(t<K.meet-.35?0:1)*(1-out),transform:`scale(${cl(pop,0,2)*L(1,S2,mv)*(1-out*.3)})`});
+    $('crest1').firstChild.style.clipPath=`inset(0 0 ${(1-eo(p(t,K.meet-.2,K.meet+.6)))*100}% 0)`;
+    html('meetWm',typed('GLYTH WORKPLACE',t,K.meet+.55,20));
+    set('meetHi',{opacity:eo(p(t,K.meet+.3,K.meet+.7))});
+    set('meet',{left:(gx2+55*S2+40)+'px',top:'540px',transform:'translateY(-50%)',opacity:mv*(1-out)});
+  }
+
+  // ================= PHONE (ACTS 2–4) =================
+  const phOn=t>=K.phoneIn-.1&&t<K.a4end+.3; set('camP',{display:phOn?'block':'none'});
+  if(phOn) renderPhone(t);
+  set('A3',{display:(t>K.privacy-.5&&t<K.a3end+.5)?'block':'none'}); if(t>K.privacy-.5&&t<K.a3end+.5) renderPrivacy(t);
+  set('A4',{display:(t>K.whole-.5&&t<K.a4end+.3)?'block':'none'}); if(t>K.whole-.5&&t<K.a4end+.3) renderOrbit(t);
+  const eOn=t>K.emp-.2&&t<K.a5end+.3; set('A5',{display:eOn?'block':'none'}); if(eOn) renderEmployer(t);
+  const cOn=t>K.hp-.3; set('A6',{display:cOn?'block':'none'}); if(cOn) renderClose(t);
+
+  // ---------------- chapter pills ----------------
+  let chT='',chO=0; const c1=win(t,K.phoneIn+.4,K.phoneIn+6.2,.5,.5), c2=win(t,K.emp+.5,K.emp+6.5,.5,.5);
+  if(c1>0){chT='FOR EMPLOYEES';chO=c1;} if(c2>0){chT='FOR EMPLOYERS';chO=c2;}
+  html('chap',chT); set('chap',{opacity:chO,left:'50%',top:'40px',transform:`translateX(-50%) translateY(${L(-10,0,chO)}px)`});
+
+  // ---------------- side captions ----------------
+  const caps=[
+    [K.phoneIn+1.0,K.onTrack-.4,'Your personal<br>wellbeing<br>companion.'],
+    [K.life,K.bannerOut+.3,'Then life<br>happens.'],
+    [K.replans-.2,K.replace-.2,'Glyth re-plans<br>your workday.'],
+    [K.ask+.3,K.privacy-.4,'You stay<br>in control.'],
+    [K.more+.3,K.fit-.2,'More than<br>sleep.'],
+    [K.fit+.2,K.mind-.2,'Training that<br>adapts.'],
+    [K.mind+.2,K.fam-.2,'A reset before<br>pressure.'],
+    [K.fam+.2,K.fin-.2,'Stay<br>connected.'],
+    [K.fin+.2,K.whole-.2,'Clarity on<br>money.'],
+  ];
+  let ct='',co=0,cy=0; for(const [a,b,s] of caps){ if(t>=a&&t<b){ ct=s; const i=eo(p(t,a,a+.6)), o=eio(p(t,b-.45,b)); co=i*(1-o); cy=L(26,0,i)-o*18; } }
+  html('cap',ct); set('cap',{opacity:co*(window.__zoomHide??1),top:'540px',transform:`translateY(calc(-50% + ${cy}px))`});
+  const tops=[[K.chain+2.4,K.chainEnd-.5,'Glyth shows you why.',300],[K.privacy+.6,K.a3end-.5,'Your data stays yours.',110],[K.whole+.2,K.a4end-.4,'One companion for the whole person.',110]];
+  let tt='',to=0,ty=0,tp=0; for(const [a,b,s,y] of tops){ if(t>=a&&t<b){ tt=s; tp=y; const i=eo(p(t,a,a+.6)), o=eio(p(t,b-.45,b)); to=i*(1-o); ty=L(20,0,i); } }
+  html('capTop',tt); set('capTop',{opacity:to,top:tp+'px',transform:`translateY(${ty}px)`});
+}
+
+// ======================= PHONE =======================
+function renderPhone(t){
+  const pin=eo(p(t,K.phoneIn,K.phoneIn+1.0));
+  let tx=0, ty=L(760,0,pin), sc=L(.94,1,pin)*L(1,.96,eio(p(t,K.grad,K.grad+1.2)));
+  const ch=eio(p(t,K.chain,K.chain+.8))*(1-eio(p(t,K.chainEnd-.7,K.chainEnd)));
+  sc*=L(1,.9,ch);
+  // act3 privacy: move left
+  const pv=eio(p(t,K.privacy-.6,K.privacy+.4))*(1-eio(p(t,K.a3end-.6,K.a3end+.2)));
+  tx+=L(0,-520,pv); sc*=L(1,.86,pv);
+  // act4 whole: shrink
+  const wh=eio(p(t,K.whole,K.whole+.8));
+  sc*=L(1,.72,wh);
+  // exit to the left for employer
+  const ex=eio(p(t,K.a4end-.9,K.a4end));
+  tx+=L(0,-1400,ex);
+  set('phone',{transform:`translate(${tx}px,${ty}px) scale(${sc})`,opacity:L(1,.12,ch),filter:ch>0.001?`blur(${ch*6}px)`:"none"});
+
+  // ---- today screen state ----
+  const evalOn=t>=K.eval&&t<K.changed, changed=t>=K.changed;
+  html('h1', t<K.eval?'Your day is on track.':(evalOn?'Re-planning your workday…':'Your day changed.<br><span style="color:var(--muted)">4 adjustments made.</span>'));
+  set('h1',{opacity:evalOn?L(.5,1,(Math.sin(t*6)+1)/2):1,transform:`translateY(${changed?L(8,0,eo(p(t,K.changed,K.changed+.5))):0}px)`});
+  set('why',{opacity:eo(p(t,K.changed+.3,K.changed+.8)),transform:`scale(${L(.8,1,cl(back(p(t,K.changed+.3,K.changed+.8)),0,1.2))*(1-.08*Math.sin(Math.PI*p(t,K.why-.1,K.why+.15)))})`});
+  const rd=eio(p(t,K.eval+.3,K.eval+1.9)); const R=Math.round(L(72,45,rd));
+  html('ringn',String(R)); $('ringv').style.strokeDashoffset=245*(1-R/100);
+  const sm=Math.round(L(435,282,rd)); html('v0',`${Math.floor(sm/60)}h ${String(sm%60).padStart(2,'0')}m`); $('b0').style.width=(sm/480*100)+'%';
+  const rc=Math.round(L(78,43,rd)), en=Math.round(L(74,48,rd)); html('v1',rc+'%'); $('b1').style.width=rc+'%'; html('v2',String(en)); $('b2').style.width=en+'%';
+  const top0=404, step=84; const ins=eio(p(t,K.add,K.add+.6));
+  const itemIn=i=>eo(p(t,K.phoneIn+.5+i*.12,K.phoneIn+1.2+i*.12));
+  const hl=(a)=>Math.sin(Math.PI*p(t,a,a+.6))*.035; // highlight pulse during tour
+  // i0
+  const sw=p(t,K.replace,K.replace+.6), flip=Math.sin(Math.PI*sw), rep=t>=K.replace+.3;
+  html('i0t',rep?'08:00':'07:00'); html('i0tt',rep?'Recovery session<small>Mobility + easy zone 2 · 35 min</small>':'Heavy strength<small>Lower body · 60 min</small>');
+  html('i0g',rep?'REPLACED':'PLANNED'); $('i0g').className='tag'+(rep?' dark':'');
+  set('i0',{top:top0+'px',opacity:itemIn(0),background:rep?'var(--goldbg)':'var(--paper)',borderColor:rep?'var(--gold)':'var(--line)',transform:`translateY(${(1-itemIn(0))*14}px) rotateX(${flip*80}deg) scale(${1+hl(K.strength)})`});
+  const pr=t>=K.protect; html('i1g',pr?'PROTECTED':'PLANNED'); $('i1g').className='tag'+(pr?' dark':'');
+  set('i1',{top:(top0+step)+'px',opacity:itemIn(1),background:pr?'var(--goldbg)':'var(--paper)',borderColor:pr?'var(--gold)':'var(--line)',transform:`translateY(${(1-itemIn(1))*14}px) scale(${1+hl(K.deep)+0.04*Math.sin(Math.PI*p(t,K.protect,K.protect+.4))})`});
+  set('i2',{top:(top0+2*step)+'px',opacity:ins,background:'var(--newbg)',borderColor:'var(--newb)',transform:`translateX(${(1-ins)*-60}px) scale(${L(.9,1,ins)})`});
+  const fx=t>=K.fixed, fxp=Math.sin(Math.PI*p(t,K.fixed,K.fixed+.5));
+  html('i3g',fx?'NEVER MOVES':'FIXED'); $('i3g').className='tag'+(fx?' dark':'');
+  set('i3',{top:(top0+L(2,3,ins)*step)+'px',opacity:itemIn(2),transform:`translateY(${(1-itemIn(2))*14}px) scale(${1+hl(K.meeting)+.04*fxp})`,boxShadow:`0 0 0 ${fxp*7}px rgba(18,19,22,${.12*fxp})`});
+  const df=eo(p(t,K.defer,K.defer+.6)), dd=t>=K.defer;
+  html('i4g',dd?'DEFERRED':'PLANNED'); html('i4t',dd?'Tmrw':'16:30'); html('i4tt',dd?'<s>Admin &amp; inbox</s><small>Moved to tomorrow 09:00</small>':'Admin &amp; inbox<small>Low priority · movable</small>');
+  set('i4',{top:(top0+L(3,4,ins)*step)+'px',opacity:itemIn(3)*L(1,.5,df),transform:`translateY(${(1-itemIn(3))*14}px) translateX(${Math.sin(Math.PI*df)*24}px)`});
+  const bIn=back(p(t,K.banner,K.banner+.6)), bOut=eio(p(t,K.bannerOut,K.bannerOut+.5));
+  set('banner',{opacity:(t<K.banner?0:1)*(1-bOut),transform:`translateY(${L(-110,0,bIn)-bOut*110}px) scale(${1+.03*Math.sin(Math.PI*p(t,K.bannerOut-.45,K.bannerOut-.15))})`});
+
+  // ---- Ask Glyth overlay ----
+  const askIn=eo(p(t,K.ask,K.ask+.6)), askOut=eio(p(t,K.privacy+3.0,K.privacy+3.6));
+  set('ask',{display:(t>K.ask&&t<K.more+.6)?'block':'none',transform:`translateY(${(1-askIn)*844}px)`});
+  if(t>K.ask){
+    const typ=typed('What if I keep my workout?',t,K.askAny-.1,17);
+    html('askTxt',typ||'Ask about your day…'); set('askTxt',{color:typ&&t<K.send+.1?'var(--ink)':'var(--muted)'});
+    if(t>=K.send+.1) html('askTxt','Ask about your day…');
+    const sent=t>=K.send;
+    set('askSend',{background:sent&&t<K.send+.8?'#F2C879':'#121316',transform:`scale(${1-.15*Math.sin(Math.PI*p(t,K.send-.1,K.send+.2))})`});
+    $('sendArrow').setAttribute('stroke',sent&&t<K.send+.8?'#121316':'#fff');
+    set('askHello',{opacity:eo(p(t,K.ask+.4,K.ask+.9))});
+    const me=eo(p(t,K.send+.05,K.send+.4)); set('askMe',{opacity:me,transform:`translateY(${(1-me)*16}px)`});
+    set('askDots',{opacity:(t>K.send+.35&&t<K.send+.85)?.4+.6*Math.abs(Math.sin(t*8)):0});
+    const re=eo(p(t,K.send+.85,K.send+1.25)); set('askRe',{opacity:re,transform:`translateY(${(1-re)*14}px)`});
+    const pp=eo(p(t,K.send+1.2,K.send+1.7)); set('prop',{opacity:pp,transform:`translateY(${(1-pp)*20}px)`});
+    const ok=t>=K.confirm; html('confirmBtn',ok?'✓ Confirmed':'Confirm'); set('confirmBtn',{background:ok?'var(--good)':'#121316',transform:`scale(${1-.06*Math.sin(Math.PI*p(t,K.confirm-.1,K.confirm+.2))})`});
+  }
+  // ---- Act 4 module screens ----
+  const scr=[['mSup',K.more],['mFit',K.fit],['mMind',K.mind],['mFam',K.fam],['mFin',K.fin]];
+  scr.forEach(([id,a],i)=>{ const nx=scr[i+1]?scr[i+1][1]:K.END; const inn=eio(p(t,a-.1,a+.55)), out=eio(p(t,nx-.1,nx+.55));
+    const vis=t>a-.15&&t<nx+.6; set(id,{display:vis?'block':'none',transform:`translateX(${(1-inn)*390-out*120}px)`,zIndex:11+i}); });
+  if(t>K.mind-.2&&t<K.fam+.6){ const br=(Math.sin((t-K.mind)*Math.PI/2.2-Math.PI/2)+1)/2; set('breath',{transform:`scale(${L(.62,1.08,br)})`}); html('breathTxt',Math.sin((t-K.mind)*Math.PI/2.2)>0?'Breathe in':'Breathe out'); }
+  if(t>K.fin-.2){ document.querySelectorAll('#finBars i').forEach((b,i)=>{ b.style.width=(+b.dataset.w*eo(p(t,K.fin+.4+i*.12,K.fin+1.2+i*.12)))+'%'; }); }
+
+  // ---- camera ----
+  const slotY=s=>106+12+top0+s*step+37;
+  const tourF=(tt)=>{ const a=eio(p(tt,K.strength-.4,K.strength+.3)), b=eio(p(tt,K.deep-.3,K.deep+.4)), c=eio(p(tt,K.meeting-.3,K.meeting+.4)); return [960, L(L(L(slotY(.5),slotY(0),a),slotY(1),b),slotY(2),c)]; };
+  const chgF=(tt)=>{ const a=eio(p(tt,K.protect-.5,K.protect)), b=eio(p(tt,K.add-.5,K.add)), c=eio(p(tt,K.defer-.5,K.defer)), d=eio(p(tt,K.fixed-.4,K.fixed+.2)); return [960, L(L(L(L(slotY(0),slotY(1),a),slotY(2),b),slotY(4),c),slotY(3),d)]; };
+  const sc2=camera($('camP'),t,[
+    [K.onTrack+.6,K.strength-.2,K.tourEnd,K.tourEnd+1.0,1.55,tourF],
+    [K.banner+.2,K.banner+1.0,K.bannerOut-.2,K.bannerOut+.6,2.25,[960,172]],
+    [K.replace-.6,K.replace+.2,K.changed-.4,K.changed+.5,1.5,chgF],
+    [K.why-1.0,K.why-.4,K.why+.2,K.why+.7,1.9,[860,330]],
+    [K.askAny-.7,K.askAny-.1,K.send+.25,K.send+.9,2.0,[960,890]],
+  ]);
+  window.__zoomHide=1-cl((sc2-1)/.25);
+
+  // ---- cursor (phone) ----
+  let cOp=0,cx=0,cy=0,ck=null;
+  const cw=(a,b,x0,y0,x1,y1,click)=>{ if(t>=a&&t<b){ const m=eo(p(t,a,click-.15)); cx=L(x0,x1,m); cy=L(y0,y1,m); cOp=p(t,a,a+.3)*(1-p(t,b-.3,b)); ck=click; } };
+  cw(K.bannerOut-1.4,K.bannerOut+.3,1150,330,1050,190,K.bannerOut-.3);
+  cw(K.why-1.2,K.why+.6,980,480,862,333,K.why);
+  cw(K.send-1.0,K.send+.5,1150,980,1123,917,K.send);
+  cw(K.confirm-1.1,K.confirm+.6,1180,760,1060,598,K.confirm);
+  cw(K.fit-1.2,K.fit+.2,1100,620,870,440,K.fit-.25);
+  cursor($('curP'),$('ripP'),t,cx,cy,cOp,ck);
+
+  // ---- chain collage ----
+  const C=K.chain;
+  if(!window.__cw) window.__cw=['c0','c1','c2','c3'].map(id=>$(id).offsetWidth);
+  const GAP=110, tot=__cw.reduce((a,b)=>a+b,0)+GAP*3; let xx=960-tot/2; const pos=__cw.map(w=>{const r=[xx,470]; xx+=w+GAP; return r;});
+  const scat=[[1180,250],[1260,690],[420,720],[430,250]];
+  const align=eio(p(t,C+2.2,C+3.2)), gone=eio(p(t,K.chainEnd-.7,K.chainEnd));
+  ['c0','c1','c2','c3'].forEach((id,i)=>{ const a=back(p(t,C+i*.14,C+.7+i*.14)), m=eo(p(t,C+i*.14,C+.8+i*.14));
+    const x=L(L(960,scat[i][0],m),pos[i][0],align), y=L(L(540,scat[i][1],m),pos[i][1],align)+Math.sin(t*1.3+i*1.7)*6*(1-align);
+    set(id,{opacity:(t<C?0:cl(a))*(1-gone),transform:`translate(${L(x,960,gone)}px,${L(y,540,gone)}px) scale(${L(.4,1,cl(a))*L(1,.4,gone)})`}); });
+  const xs=[[1380,470],[700,880],[200,520],[1480,130],[860,130]];
+  ['x0','x1','x2','x3','x4'].forEach((id,i)=>{ const a=back(p(t,C+.3+i*.12,C+1.0+i*.12)), m=eo(p(t,C+.3+i*.12,C+1.1+i*.12)), o=eio(p(t,C+1.8,C+2.4));
+    set(id,{opacity:(t<C?0:cl(a))*(1-o),transform:`translate(${L(960,xs[i][0],m)}px,${L(540,xs[i][1],m)+Math.sin(t*1.1+i*2.3)*7-o*30}px) scale(${L(.4,1,cl(a))})`}); });
+  ['ar0','ar1','ar2'].forEach((id,i)=>{ const d=eio(p(t,C+3.0+i*.25,C+3.5+i*.25)); const x0=pos[i][0]+__cw[i], x1=pos[i+1][0];
+    set(id,{left:(x0+18)+'px',top:'512px',width:(x1-x0-40)+'px',transform:`scaleX(${d})`,opacity:d>0?(1-eio(p(t,K.chainEnd-.9,K.chainEnd-.6))):0}); });
+}
+
+// ======================= PRIVACY =======================
+function renderPrivacy(t){
+  const a=eo(p(t,K.privacy,K.privacy+.8)), out=eio(p(t,K.a3end-.7,K.a3end));
+  set('empCard',{opacity:a*(1-out),transform:`translateX(${(1-a)*80}px)`});
+  const dv=eo(p(t,K.privacy+.3,K.privacy+1.1));
+  set('divider',{opacity:(1-out),transform:`scaleY(${dv})`,transformOrigin:'top'}); set('divLbl',{opacity:dv*(1-out)});
+  const ts=[K.pSleep,K.pHealth,K.pConv,K.pConv+.5,K.pConv+.95];
+  const ys=[300,400,500,600,700];
+  ts.forEach((s,i)=>{ const go=eo(p(t,s,s+.45)), bounce=eio(p(t,s+.45,s+.9));
+    const x=L(L(700,940,go),780,bounce) - (i%2)*0;
+    const shake=Math.sin((t-s-.45)*40)*6*(1-p(t,s+.45,s+.8))*(t>s+.45?1:0);
+    set('pc'+i,{left:'0',top:'0',opacity:cl(p(t,s,s+.2))*(1-out),transform:`translate(${x+shake}px,${ys[i]}px) scale(${L(.7,1,go)})`}); });
+  const g=eio(p(t,K.agg,K.agg+1.2)); const land=t>K.agg+1.2;
+  set('aggChip',{left:'0',top:'0',opacity:(t>K.agg&&!land?1:0)*(1-out),transform:`translate(${L(700,1240,g)}px,${L(480,690,g)}px) scale(${L(.8,1,g)})`});
+  set('aggIn',{opacity:land?eo(p(t,K.agg+1.2,K.agg+1.5)):0});
+}
+
+// ======================= ORBIT =======================
+function renderOrbit(t){
+  const pos=[[420,330],[380,640],[1250,330],[1290,640]];
+  const out=eio(p(t,K.a4end-.9,K.a4end));
+  [0,1,2,3].forEach(i=>{ const a=back(p(t,K.whole+.3+i*.15,K.whole+1.0+i*.15)), m=eo(p(t,K.whole+.3+i*.15,K.whole+1.1+i*.15));
+    set('ot'+i,{left:'0',top:'0',opacity:cl(a)*(1-out),transform:`translate(${L(860,pos[i][0],m)-out*1200}px,${L(500,pos[i][1],m)+Math.sin(t*1.2+i*1.9)*6}px) scale(${L(.5,1,cl(a))})`}); });
+}
+
+// ======================= EMPLOYER =======================
+function renderEmployer(t){
+  const a=eo(p(t,K.emp,K.emp+1.0)), out=eio(p(t,K.a5end-.8,K.a5end));
+  set('win',{opacity:a*(1-out),transform:`translateY(${(1-a)*120-out*40}px) scale(${L(.94,1,a)})`});
+  // pages: [id, start, end, dockIndex]
+  const pages=[['pOv',K.emp,K.insight,0],['pIns',K.insight,K.prog,2],['pProg',K.prog,K.priv,3],['pTeams',K.priv,K.END,1]];
+  let di=0,dm=0;
+  pages.forEach(([id,s,e,d],i)=>{ const inn=i===0?1:eo(p(t,s-.2,s+.5)), o=i===pages.length-1?0:eio(p(t,e-.3,e+.1)); const vis=t>s-.25&&t<e+.15;
+    set(id,{display:vis?'block':'none',opacity:inn*(1-o),transform:`translateY(${(1-inn)*24}px)`}); if(t>=s-.2){ di=d; dm=i; } });
+  // dock highlight
+  if(!window.__dk||!window.__dk[0][1]) window.__dk=[0,1,2,3].map(i=>[$('ed'+i).offsetLeft,$('ed'+i).offsetWidth]);
+  const order=pages.map(x=>x[3]); let hx=__dk[order[0]][0],hw=__dk[order[0]][1];
+  for(let i=1;i<pages.length;i++){ const m=eio(p(t,pages[i][1]-.3,pages[i][1]+.2)); hx=L(hx,__dk[order[i]][0],m); hw=L(hw,__dk[order[i]][1],m); }
+  set('edHi',{left:hx+'px',width:hw+'px'});
+  [0,1,2,3].forEach(i=>set('ed'+i,{color:i===di?'#F7F7F5':'var(--ink)'}));
+  // overview anims
+  const ov=eo(p(t,K.emp+.6,K.emp+1.8)); $('ovRing').style.strokeDashoffset=320.4*(1-.82*ov); html('ovN',Math.round(82*ov)+'%');
+  document.querySelectorAll('.ovb').forEach((b,i)=>b.style.width=(+b.dataset.w*eo(p(t,K.emp+.9+i*.15,K.emp+1.8+i*.15)))+'%');
+  [0,1,2,3].forEach(i=>{ const e=eo(p(t,K.emp+1.4+i*.12,K.emp+2.1+i*.12)); set('teamRow_'+i,{opacity:e,transform:`translateY(${(1-e)*20}px) scale(${1+.03*Math.sin(Math.PI*p(t,K.byTeam+i*.25,K.byTeam+i*.25+.5))})`}); });
+  // insight chain
+  if(!window.__ew||!window.__ew[0]) window.__ew=[0,1,2,3].map(i=>$('ec'+i).offsetWidth);
+  let ex=0; const eg=70; [0,1,2,3].forEach(i=>{ const e=back(p(t,K.insight+.9+i*.55,K.insight+1.5+i*.55)); set('ec'+i,{left:ex+'px',opacity:cl(p(t,K.insight+.9+i*.55,K.insight+1.2+i*.55)),transform:`translateY(${(1-cl(e))*20}px) scale(${L(.85,1,cl(e))})`});
+    if(i<3){ const d=eio(p(t,K.insight+1.3+i*.55,K.insight+1.8+i*.55)); set('ea'+i,{left:(ex+__ew[i]+12)+'px',top:'44px',width:(eg-24)+'px',transform:`scaleX(${d})`,opacity:d>0?1:0}); }
+    ex+=__ew[i]+eg; });
+  const ic=eo(p(t,K.act-.2,K.act+.5)); set('iCard',{opacity:ic,transform:`translateY(${(1-ic)*24}px)`});
+  const st=t<K.approve?['PROPOSED','st']:t<K.changedE?['ACTIVE','st green']:['COMPLETED','st dark']; html('iSt',st[0]); $('iSt').className=st[1];
+  set('apBtn',{background:t>=K.approve?'var(--good)':'#121316',transform:`scale(${1-.06*Math.sin(Math.PI*p(t,K.approve-.1,K.approve+.2))})`}); html('apBtn',t>=K.approve?'✓ Approved':'Approve');
+  const oc=eo(p(t,K.outcome-.4,K.outcome+.3)); set('oCard',{opacity:oc,transform:`translateX(${(1-oc)*30}px)`});
+  const cn=eio(p(t,K.count,K.count+1.8)); html('oNum',Math.round(L(31,21,cn))+'%');
+  $('spark').style.strokeDasharray='600'; $('spark').style.strokeDashoffset=600*(1-eo(p(t,K.outcome+.2,K.count+1.8)));
+  // programmes
+  [0,1,2].forEach(i=>{ const e=eo(p(t,K.prog+.4+i*.15,K.prog+1.1+i*.15)); set('pg'+i,{opacity:e,transform:`translateY(${(1-e)*24}px)`});
+    const b=$('pg'+i).querySelector('.pgb'), v=$('pg'+i).querySelector('.pgv'); const f=eo(p(t,K.prog+1.2+i*.2,K.prog+2.6+i*.2)); b.style.width=(+b.dataset.w*f)+'%'; v.textContent=Math.round(+b.dataset.w*f)+'%'; });
+  [0,1,2,3].forEach(i=>{ const e=eo(p(t,K.priv+.3+i*.1,K.priv+.9+i*.1)); set('teamRow2_'+i,{opacity:e,transform:`translateY(${(1-e)*20}px)`, boxShadow:i===3?`0 0 0 ${6*eo(p(t,K.small,K.small+.5))}px rgba(18,19,22,.12)`:'none'}); });
+  // badges (in camE space): around the People card
+  const peopleX=180+56+3*(344+22)+172, peopleY=116+160+130+165;
+  const bp=[[peopleX-700,peopleY+250],[peopleX-330,peopleY+250],[peopleX+40,peopleY+250]];
+  [0,1,2].forEach(i=>{ const s=K.never+i*.45; const e=back(p(t,s,s+.5)); set('bd'+i,{left:'0',top:'0',opacity:cl(p(t,s,s+.2))*(1-out),transform:`translate(${bp[i][0]-130}px,${bp[i][1]}px) scale(${L(.6,1,cl(e))})`}); });
+  // camera (employer)
+  camera($('camE'),t,[
+    [K.teams-.2,K.teams+.8,K.insight-1.0,K.insight-.2,1.32,[960,116+160+440+100]],
+    [K.act+.2,K.act+1.0,K.outcome-.6,K.outcome+.2,1.35,[180+56+430,116+160+310+120]],
+    [K.outcome-.4,K.outcome+.4,K.prog-1.0,K.prog-.3,1.35,[180+56+890+279,116+160+310+120]],
+    [K.small-.6,K.small+.3,K.a5end-1.4,K.a5end-.6,1.3,[peopleX-180,peopleY+60]],
+  ]);
+  // cursor
+  let cOp=0,cx=0,cy=0,ck=null;
+  if(t>=K.approve-1.4&&t<K.approve+.6){ const m=eo(p(t,K.approve-1.4,K.approve-.15)); cx=L(1100,180+56+230,m); cy=L(900,116+160+310+178,m); cOp=p(t,K.approve-1.4,K.approve-1.1)*(1-p(t,K.approve+.3,K.approve+.6)); ck=K.approve; }
+  cursor($('curE'),$('ripE'),t,cx,cy,cOp,ck);
+}
+
+// ======================= CLOSE =======================
+function renderClose(t){
+  const h=back(p(t,K.hp,K.hp+.6)), b=back(p(t,K.bw,K.bw+.6)), o=eio(p(t,K.endWm-.7,K.endWm-.2));
+  set('hp',{opacity:cl(p(t,K.hp,K.hp+.3))*(1-o),transform:`translateY(${(1-cl(h))*40}px)`});
+  set('bw',{opacity:cl(p(t,K.bw,K.bw+.3))*(1-o),transform:`translateY(${(1-cl(b))*40}px)`});
+  const SE=1.4, totE=110*SE+44+WMW(), ix=960-totE/2+55*SE;
+  const pop=back(p(t,K.endWm-.3,K.endWm+.3)), mv=eio(p(t,K.endWm+.25,K.endWm+.75)); const icx=L(960,ix,mv);
+  const breathe=1+.02*eio(p(t,K.tag,K.END));
+  set('crest6',{left:(icx-55)+'px',top:(540-55-40)+'px',opacity:t<K.endWm-.3?0:1,transform:`scale(${cl(pop,0,2)*SE*breathe})`});
+  $('crest6').firstChild.style.clipPath=`inset(0 0 ${(1-eo(p(t,K.endWm-.2,K.endWm+.6)))*100}% 0)`;
+  html('endWm',typed('GLYTH WORKPLACE',t,K.endWm+.55,22));
+  set('endWm',{left:(ix+55*SE+44)+'px',top:(540-40)+'px',transform:`translateY(-50%) scale(${breathe})`,transformOrigin:'left center'});
+  set('endtag',{opacity:eo(p(t,K.tag,K.tag+.6)),top:'640px',transform:`translateY(${L(14,0,eo(p(t,K.tag,K.tag+.6)))}px)`});
+}
+window.render=render; window.K=K; render(0);
+</script>
+</body></html>

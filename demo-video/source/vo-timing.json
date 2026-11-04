@@ -1,0 +1,322 @@
+[
+ {
+  "n": 1,
+  "act": "1 Hook",
+  "planned": 0.5,
+  "place": 0.5,
+  "on": 0.5,
+  "off": 3.66,
+  "dur": 3.16,
+  "text": "Most wellness programmes are built for an average employee."
+ },
+ {
+  "n": 2,
+  "act": "1 Hook",
+  "planned": 4.5,
+  "place": 4.41,
+  "on": 4.5,
+  "off": 6.69,
+  "dur": 2.27,
+  "text": "But nobody has an average day."
+ },
+ {
+  "n": 3,
+  "act": "1 Hook",
+  "planned": 7.5,
+  "place": 7.5,
+  "on": 7.5,
+  "off": 13.01,
+  "dur": 5.51,
+  "text": "Sleep, workload, meetings, pressure. It all shows up at work."
+ },
+ {
+  "n": 4,
+  "act": "1 Hook",
+  "planned": 11.8,
+  "place": 13.36,
+  "on": 13.36,
+  "off": 15.35,
+  "dur": 1.99,
+  "text": "Meet Glyth Workplace."
+ },
+ {
+  "n": 5,
+  "act": "2 Employee",
+  "planned": 15.5,
+  "place": 15.7,
+  "on": 15.7,
+  "off": 22.75,
+  "dur": 7.05,
+  "text": "Glyth gives every employee a personal wellbeing companion that understands their day, and plans around what matters."
+ },
+ {
+  "n": 6,
+  "act": "2 Employee",
+  "planned": 23.5,
+  "place": 23.5,
+  "on": 23.5,
+  "off": 30.42,
+  "dur": 6.92,
+  "text": "This morning, you're on track. Strength training at seven, deep work at ten, and the investor meeting at two."
+ },
+ {
+  "n": 7,
+  "act": "2 Employee",
+  "planned": 32,
+  "place": 32.0,
+  "on": 32.0,
+  "off": 33.85,
+  "dur": 1.85,
+  "text": "Then life happens."
+ },
+ {
+  "n": 8,
+  "act": "2 Employee",
+  "planned": 34,
+  "place": 34.2,
+  "on": 34.2,
+  "off": 38.99,
+  "dur": 4.78,
+  "text": "Four hours and forty-two minutes of sleep. Your third short night in a row."
+ },
+ {
+  "n": 9,
+  "act": "2 Employee",
+  "planned": 40.5,
+  "place": 40.5,
+  "on": 40.5,
+  "off": 45.41,
+  "dur": 4.91,
+  "text": "Most apps would just show you a score. Glyth re-plans your workday."
+ },
+ {
+  "n": 10,
+  "act": "2 Employee",
+  "planned": 47,
+  "place": 47.0,
+  "on": 47.0,
+  "off": 49.82,
+  "dur": 2.82,
+  "text": "Heavy training becomes a recovery session."
+ },
+ {
+  "n": 11,
+  "act": "2 Employee",
+  "planned": 50.5,
+  "place": 50.5,
+  "on": 50.5,
+  "off": 52.3,
+  "dur": 1.8,
+  "text": "Deep work is protected."
+ },
+ {
+  "n": 12,
+  "act": "2 Employee",
+  "planned": 53,
+  "place": 53.0,
+  "on": 53.0,
+  "off": 55.93,
+  "dur": 2.93,
+  "text": "A recovery break is added before your meeting."
+ },
+ {
+  "n": 13,
+  "act": "2 Employee",
+  "planned": 57,
+  "place": 57.0,
+  "on": 57.0,
+  "off": 61.96,
+  "dur": 4.96,
+  "text": "Admin moves to tomorrow. And the meeting that matters never moves."
+ },
+ {
+  "n": 14,
+  "act": "2 Employee",
+  "planned": 63,
+  "place": 62.91,
+  "on": 63.0,
+  "off": 69.26,
+  "dur": 6.35,
+  "text": "Tap why, and Glyth shows its reasoning: what it observed, and how it responded."
+ },
+ {
+  "n": 15,
+  "act": "3 Trust",
+  "planned": 70,
+  "place": 70.0,
+  "on": 70.0,
+  "off": 75.56,
+  "dur": 5.56,
+  "text": "You stay in control. Ask Glyth anything, and nothing changes until you confirm it."
+ },
+ {
+  "n": 16,
+  "act": "3 Trust",
+  "planned": 79,
+  "place": 78.89,
+  "on": 79.0,
+  "off": 85.84,
+  "dur": 6.95,
+  "text": "And your personal data stays yours. Your employer never sees your sleep, your health, or your conversations."
+ },
+ {
+  "n": 17,
+  "act": "4 Whole person",
+  "planned": 88.5,
+  "place": 88.41,
+  "on": 88.5,
+  "off": 91.42,
+  "dur": 3.0,
+  "text": "Because wellbeing at work is about more than sleep."
+ },
+ {
+  "n": 18,
+  "act": "4 Whole person",
+  "planned": 92.5,
+  "place": 92.5,
+  "on": 92.5,
+  "off": 95.24,
+  "dur": 2.74,
+  "text": "Training that adapts to how you've recovered."
+ },
+ {
+  "n": 19,
+  "act": "4 Whole person",
+  "planned": 97,
+  "place": 97.0,
+  "on": 97.0,
+  "off": 99.93,
+  "dur": 2.93,
+  "text": "A five-minute reset before a high-pressure meeting."
+ },
+ {
+  "n": 20,
+  "act": "4 Whole person",
+  "planned": 102,
+  "place": 102.0,
+  "on": 102.0,
+  "off": 105.24,
+  "dur": 3.24,
+  "text": "Gentle nudges to stay connected with the people who matter."
+ },
+ {
+  "n": 21,
+  "act": "4 Whole person",
+  "planned": 107.5,
+  "place": 107.5,
+  "on": 107.5,
+  "off": 111.63,
+  "dur": 4.13,
+  "text": "And clarity on your finances, because money worries come to work too."
+ },
+ {
+  "n": 22,
+  "act": "4 Whole person",
+  "planned": 113.5,
+  "place": 113.5,
+  "on": 113.5,
+  "off": 116.01,
+  "dur": 2.51,
+  "text": "One companion for the whole person."
+ },
+ {
+  "n": 23,
+  "act": "5 Employer",
+  "planned": 119,
+  "place": 119.0,
+  "on": 119.0,
+  "off": 124.43,
+  "dur": 5.43,
+  "text": "For employers, Glyth Workplace turns wellbeing into something you can see, and act on."
+ },
+ {
+  "n": 24,
+  "act": "5 Employer",
+  "planned": 126.5,
+  "place": 126.41,
+  "on": 126.5,
+  "off": 132.27,
+  "dur": 5.85,
+  "text": "A live view of how your organisation is doing. Team by team, in aggregate."
+ },
+ {
+  "n": 25,
+  "act": "5 Employer",
+  "planned": 133,
+  "place": 132.9,
+  "on": 133.0,
+  "off": 138.18,
+  "dur": 5.28,
+  "text": "Glyth spots patterns early, like meeting load starting to eat into focus time."
+ },
+ {
+  "n": 26,
+  "act": "5 Employer",
+  "planned": 140,
+  "place": 140.0,
+  "on": 140.0,
+  "off": 145.43,
+  "dur": 5.43,
+  "text": "It suggests a response. You approve it. Then you see what changed."
+ },
+ {
+  "n": 27,
+  "act": "5 Employer",
+  "planned": 146,
+  "place": 146.0,
+  "on": 146.0,
+  "off": 151.15,
+  "dur": 5.15,
+  "text": "Focus fragmentation in one team, down from thirty-one to twenty-one percent."
+ },
+ {
+  "n": 28,
+  "act": "5 Employer",
+  "planned": 153,
+  "place": 153.0,
+  "on": 153.0,
+  "off": 157.08,
+  "dur": 4.08,
+  "text": "Run programmes across teams, and measure their impact over time."
+ },
+ {
+  "n": 29,
+  "act": "5 Employer",
+  "planned": 159,
+  "place": 159.0,
+  "on": 159.0,
+  "off": 166.0,
+  "dur": 7.0,
+  "text": "All without surveillance. Small teams stay private, and individual data is never shown."
+ },
+ {
+  "n": 30,
+  "act": "6 Close",
+  "planned": 168.5,
+  "place": 168.42,
+  "on": 168.5,
+  "off": 171.94,
+  "dur": 3.53,
+  "text": "Healthier people. Better work."
+ },
+ {
+  "n": 31,
+  "act": "6 Close",
+  "planned": 172,
+  "place": 172.29,
+  "on": 172.29,
+  "off": 173.91,
+  "dur": 1.62,
+  "text": "Glyth Workplace."
+ },
+ {
+  "n": 32,
+  "act": "6 Close",
+  "planned": 174,
+  "place": 174.18,
+  "on": 174.26,
+  "off": 176.34,
+  "dur": 2.17,
+  "text": "Wellbeing that works with your workday."
+ }
+]

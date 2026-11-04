@@ -1,0 +1,7 @@
+project_id = "glyth-system-context"
+[api]
+enabled = true
+port = 54331
+schemas = ["public"]
+[db]
+port = 54332

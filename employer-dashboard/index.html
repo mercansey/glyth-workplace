@@ -2,7 +2,7 @@
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Glyth Workplace — Employer</title><meta name="theme-color" content="#F7F7F5">
 <script>try{var th=localStorage.getItem('glyth-snapshot-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=th}catch(e){document.documentElement.dataset.theme='light'}</script>
-<link rel="stylesheet" href="../styles.css"><link rel="stylesheet" href="employer.css"></head>
+<link rel="stylesheet" href="../styles.css?v=chatfade1"><link rel="stylesheet" href="employer.css?v=workplace1"></head>
 <body>
 <main class="shell emp-shell">
   <header class="top"><div class="top-inner" style="display:flex;justify-content:space-between;align-items:flex-start;width:100%">
@@ -19,10 +19,24 @@
     <div class="label">Insights</div><h1 style="font-size:28px">What the organisation is noticing.</h1>
     <p class="muted" style="margin:0">Aggregates only — observed is kept distinct from inferred.</p></div>
     <div id="insightsRoot" style="margin-top:16px"></div></section>
+  <section id="view-programmes" class="view hidden" aria-label="Programmes"><div>
+    <div class="label">Programmes</div><h1 style="font-size:28px">Programmes that change the pattern.</h1>
+    <p class="muted" style="margin:0">Longer-running initiatives linking goals, teams and interventions — aggregates only.</p></div>
+    <div id="programmesRoot" style="margin-top:16px"></div></section>
 </main>
 
-<div class="dock"><nav class="liquid" aria-label="Employer"><span class="nav-indicator" aria-hidden="true"></span><button data-view="overview" aria-selected="true">Overview</button><button data-view="teams" aria-selected="false">Teams</button><button data-view="insights" aria-selected="false">Insights</button></nav></div>
+<div id="teamScreen" class="team-screen hidden" role="dialog" aria-modal="true" aria-label="Team detail">
+  <div class="team-screen-head"><div class="team-screen-bar">
+    <button class="icon-btn" id="teamBack" aria-label="Back to Teams">‹ Teams</button>
+    <div class="team-screen-title"><div class="label">Team</div><div id="teamScreenName">Team</div></div>
+    <span class="chip" id="teamScreenState"></span>
+  </div>
+  <nav class="seg" id="teamTabs" aria-label="Team detail tabs"><button data-ttab="overview" aria-selected="true">Overview</button><button data-ttab="members" aria-selected="false">Members</button><button data-ttab="trends" aria-selected="false">Trends</button></nav>
+  </div>
+  <div class="team-screen-body"><div id="teamContent"></div></div>
+</div>
+<div class="dock"><nav class="liquid" aria-label="Employer"><span class="nav-indicator" aria-hidden="true"></span><button data-view="overview" aria-selected="true">Overview</button><button data-view="teams" aria-selected="false">Teams</button><button data-view="insights" aria-selected="false">Insights</button><button data-view="programmes" aria-selected="false">Programmes</button></nav></div>
 <div id="backdrop" class="backdrop hidden"></div>
 <div id="sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-label="Sheet"><div class="sheet-inner"><button class="icon-btn" id="closeSheet" style="float:right">Close</button><div id="sheetContent"></div></div></div>
-<script type="module" src="employer.js"></script>
+<script type="module" src="employer.js?v=live1"></script>
 </body></html>

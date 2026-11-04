@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Merge these keys into the App target Info.plist. Replace YOUR-DOMAIN. -->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict>
+  <key>NSHealthShareUsageDescription</key><string>Glyth reads your sleep, heart-rate variability, resting heart rate and workouts to adapt your day. This data stays private to you and is never shared with your employer.</string>
+  <key>NSCalendarsUsageDescription</key><string>Glyth uses your calendar to understand fixed commitments and protect important time.</string>
+  <key>NSCalendarsWriteOnlyAccessUsageDescription</key><string>Glyth can add focus and recovery blocks to your calendar only when you confirm.</string>
+  <key>NSCalendarsFullAccessUsageDescription</key><string>Glyth reads your calendar to understand fixed commitments and protect important time.</string>
+  <key>BGTaskSchedulerPermittedIdentifiers</key><array><string>app.glyth.refresh</string></array>
+  <key>UIBackgroundModes</key><array><string>fetch</string></array>
+  <key>CFBundleURLTypes</key><array><dict><key>CFBundleURLSchemes</key><array><string>glyth</string></array><key>CFBundleURLName</key><string>app.glyth.snapshot</string></dict></array>
+</dict></plist>

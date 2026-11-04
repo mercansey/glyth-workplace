@@ -1,0 +1,11 @@
+# Finance MVP (PRIVATE_FINANCIAL)
+
+Audit matrix (current hackathon repo, before build): Finance placeholder = support-card sheet only (EXISTS, replaced); file upload = none (MISSING, built server-side); Supabase Storage = none used (not needed — originals are NOT retained); schema = profiles/goals/etc, no finance tables (MISSING, migration 012); currency = none (derived per-import); Meta provider = `src/ai/providers.js` MetaReasoningProvider + deterministic fallback (REUSABLE); context compiler = `compileContext` (finance deliberately excluded); Insights/Progress/Today = existing views (REUSABLE, finance hooks added); Ask Glyth = `/api/ask` (REUSABLE pattern, Finance has its own deterministic-first `/api/finance/ask`); charts = none (restrained HTML/CSS bars with text summaries); Liquid Glass/sheets = `.glass`, `openSheet` (REUSABLE); privacy = bridge `FORBIDDEN_CATEGORIES` already includes `finance` (REUSABLE, tested); spreadsheet deps = none (zero-dependency CSV parser + values-only XLSX zip/XML reader added, no macros/scripts/formula execution).
+
+Flow: upload (CSV/XLSX, ≤15MB, ≤50k rows) → server parse → header/column detection (low confidence returns `needsMapping` + sheet selector data) → normalise to integer minor units → SHA-256 fingerprint dedupe (`user|date|amount|currency|normalised description`) → preview → user confirm → persist → deterministic metrics/recurring → Meta briefing over aggregates only (strict validated schema) with deterministic fallback.
+
+Retention: original files are processed in memory and never stored; no public bucket, no signed URLs needed. Delete an import or all Finance data from Finance → Insights.
+
+Privacy: `PRIVATE_FINANCIAL`. Finance never enters `compileContext`, employer aggregates, or the bridge (forbidden category, tested). RLS in migration `202611030012_finance.sql` is owner-only (`auth.uid() = user_id`) on all five finance tables; live repository loads/saves finance through the user's RLS-bound client and degrades gracefully until the migration is applied. No automatic money movement, no regulated investment advice.
+
+Demo: Finance → "Load demo statement" (synthetic 5-month data) or download `/api/finance/demo-csv` and upload it back for the full hero flow.

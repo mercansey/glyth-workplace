@@ -2,7 +2,7 @@
 <html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Glyth Snapshot — Today</title><meta name="theme-color" id="themeColor" content="#F7F7F5"><meta name="description" content="Clean-room hackathon prototype: a personal AI that understands context, detects change, and adapts your day.">
 <script>try{var th=localStorage.getItem('glyth-snapshot-theme')||(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light');document.documentElement.dataset.theme=th}catch(e){document.documentElement.dataset.theme='light'}</script>
-<link rel="stylesheet" href="styles.css?v=blur-headings"></head>
+<link rel="stylesheet" href="styles.css?v=chatfade1"></head>
 <body>
 <main class="shell">
   <header class="top"><div class="top-inner">
@@ -12,14 +12,14 @@
       
       <button class="notif-btn" id="notifBtn" aria-label="Notifications" title="Notifications"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.7 21a2 2 0 0 1-3.4 0"/></svg><span class="notif-badge hidden" id="notifBadge">0</span></button>
       <button class="notif-btn" id="workplaceBtn" aria-label="Workplace profile — Northstar" title="Workplace profile"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V7l8-4 8 4v14"/><path d="M2.5 21h19"/><path d="M9.5 21v-5h5v5"/><path d="M9 8h.01M15 8h.01M9 11.5h.01M15 11.5h.01"/></svg></button>
-      <button class="avatar-ring" id="flowBtn" aria-label="Open FlowID for Alex" title="FlowID Lite">
+      <button class="avatar-ring" id="flowBtn" aria-label="Open your FlowID" title="FlowID Lite">
         <svg viewBox="0 0 44 44" aria-hidden="true"><circle class="ring-track" cx="22" cy="22" r="19" fill="none" stroke-width="2.5"/><circle class="ring-value" id="avatarRing" cx="22" cy="22" r="19" fill="none" stroke-width="2.5" stroke-linecap="round"/></svg>
-        <span class="avatar-core" aria-hidden="true">A</span>
+        <span class="avatar-core" id="avatarInitial" aria-hidden="true">G</span>
       </button>
     </div></div></header>
 
   <section id="view-today" class="view" aria-label="Today">
-    <div class="glass"><p class="muted" style="margin:0;font-size:14px">Welcome back, Alex</p>
+    <div class="glass"><p class="muted" id="greeting" style="margin:0;font-size:14px">Welcome back</p><h1 id="heroLine" style="font-size:26px;margin:8px 0 0">No data yet.</h1>
       <div class="state-hero" style="margin-top:18px">
         <div class="ring-wrap" role="img" aria-label="Readiness score">
           <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true"><circle class="ring-track" cx="56" cy="56" r="48" fill="none" stroke-width="7"/><circle class="ring-value" id="readinessRing" cx="56" cy="56" r="48" fill="none" stroke-width="7" stroke-linecap="round"/></svg>
@@ -33,62 +33,175 @@
         </div>
       </div></div>
 
+
     <button class="next-action" id="nextAction" type="button" aria-label="Next action">
-      <span class="thumb" id="nextTime">07:30</span>
-      <span><span class="label">Next action</span><h3 id="nextTitle">Heavy strength session</h3><p id="nextNote">Week 6, lower body</p><span class="pill-dot" id="nextPill"><i></i><span id="nextStatus">On plan</span></span></span>
+      <span class="thumb" id="nextTime">--:--</span>
+      <span><span class="label">Next action</span><h3 id="nextTitle">No plan yet</h3><p id="nextNote">Your calendar will build today’s plan once connected.</p><span class="pill-dot" id="nextPill"><i></i><span id="nextStatus">On plan</span></span></span>
     </button>
 
-    <div id="changeBanner" class="glass hidden" style="margin-top:14px;border-color:rgba(242,200,121,.5)"><strong>Your day changed.</strong> <span id="changeCount"></span> <button class="btn sm" id="whyBtn" style="float:right">Why?</button><div class="muted small">Glyth reorganised today around your current state. Nothing moved without a reason you can inspect.</div></div>
+    <div class="glass" style="margin-top:14px"><div class="label">Glyth orchestration</div><p class="muted small" style="margin:6px 0 12px">Re-check today against your latest sleep, recovery, calendar and training.</p><button class="btn" id="orchestrateBtn" type="button">Re-evaluate my day</button> <span class="small muted" id="orchestrateStatus" role="status" aria-live="polite"></span></div>
 
+    <div id="changeBanner" class="glass hidden" style="margin-top:14px;border-color:rgba(242,200,121,.5)"><strong>Your day changed.</strong> <span id="changeCount"></span> <button class="btn sm" id="whyBtn" style="float:right">Why?</button><div class="muted small" id="changeSummary">Glyth reorganised today around your current state. Nothing moved without a reason you can inspect.</div><div class="label" style="margin-top:12px">What changed</div><ul class="change-list" id="changeList"></ul></div>
+
+    <div id="fitnessToday"></div>
+    <div id="financeToday"></div>
+    <div id="mindfulnessToday"></div>
+    <div id="familyToday"></div>
     <div class="glass" style="margin-top:14px"><div class="label">Today's focus</div><ol id="focusList" style="margin:10px 0 0;padding-left:20px"></ol></div>
 
-    <div style="margin-top:18px"><h2>Adaptive plan</h2><div class="plan" id="plan"></div></div>
-
-    <div id="recWrap" style="margin-top:18px"><h2>Recommendations</h2><div class="grid" id="recs"></div></div>
+    <div style="margin-top:18px">
+      <div class="plan-tabs" role="tablist" aria-label="Plan and recommendations">
+        <button role="tab" id="tab-plan" data-ptab="plan" aria-selected="true" aria-controls="panel-plan">Adaptive plan</button>
+        <button role="tab" id="tab-recs" data-ptab="recs" aria-selected="false" aria-controls="panel-recs">Recommendations <span class="tab-badge hidden" id="recBadge">0</span></button>
+      </div>
+      <section id="panel-plan" role="tabpanel" aria-labelledby="tab-plan" style="margin-top:12px"><div class="plan" id="plan"></div></section>
+      <section id="panel-recs" role="tabpanel" aria-labelledby="tab-recs" class="hidden" style="margin-top:12px"><div class="grid" id="recs"></div></section>
+    </div>
   </section>
 
   <section id="view-insights" class="view hidden" aria-label="Insights">
     <div><div class="label">Insights</div><h1 style="font-size:28px">What Glyth is noticing.</h1><p class="muted" style="margin:0">The signals behind today's plan — and the reasoning you can inspect.</p></div>
-    <div class="glass" style="margin-top:16px"><div class="label">Key insight</div><h2 id="insightHead" style="font-size:22px;margin-top:6px"></h2><p class="muted" id="insightBody"></p><div class="chain" id="chain"></div></div>
+    <div class="glass" style="margin-top:16px">
+      <div class="cal-head"><div><div class="label">Readiness</div><h2 style="font-size:22px;margin:6px 0 0">Readiness calendar</h2></div>
+      <div class="cal-toggle" role="tablist" aria-label="Calendar range"><button data-cal="week" role="tab" aria-selected="true">Week</button><button data-cal="month" role="tab" aria-selected="false">Month</button><button data-cal="year" role="tab" aria-selected="false">Year</button></div></div>
+      <p class="muted" id="calSummary" style="margin:10px 0 0"></p>
+      <div id="readinessCal" style="margin-top:14px"></div>
+      <p class="small" id="calDetail" style="margin:12px 0 0;font-weight:600"></p>
+      <div class="cal-legend"><span><i style="background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--bad) 58%,var(--surface)) 0 4px,color-mix(in srgb,var(--bad) 26%,var(--surface)) 4px 8px)"></i>&lt;50</span><span><i style="background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--warn) 50%,var(--surface)) 0 4px,color-mix(in srgb,var(--warn) 22%,var(--surface)) 4px 8px)"></i>50–61</span><span><i style="background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--good) 38%,var(--surface)) 0 4px,color-mix(in srgb,var(--good) 16%,var(--surface)) 4px 8px)"></i>62–74</span><span><i style="background:repeating-linear-gradient(135deg,color-mix(in srgb,var(--good) 62%,var(--surface)) 0 4px,color-mix(in srgb,var(--good) 30%,var(--surface)) 4px 8px)"></i>75+</span><span class="muted" style="margin-left:auto">History appears as it is recorded</span></div>
+    </div>
+    <div class="glass" style="margin-top:16px" aria-label="Key insight"><div class="label">Key insight</div><h2 id="insightHeadline" style="font-size:22px;margin:6px 0 0">You are starting from a stable baseline.</h2><p class="muted" id="insightBody" style="margin:8px 0 0"></p><div class="chain" id="insightChain" role="img" aria-label="How sleep affects today"></div><p style="margin:14px 0 0"><span class="label">Affected today</span><br><span id="insightAffected">Nothing yet — your plan stands.</span></p><p style="margin:10px 0 0"><span class="label">Response</span><br><span id="insightResponse">No changes. Glyth keeps watching.</span></p></div>
+    <div id="financeInsights"></div>
     <div class="glass" style="margin-top:14px"><h2>Trajectory</h2><div id="trends"></div></div>
     <div class="glass" style="margin-top:14px"><h2>Intervention history</h2><p class="muted small">Glyth observes → intervenes → remembers → evaluates.</p><div id="interventions" class="grid"></div></div>
-    <div class="glass" style="margin-top:14px"><h2>Why Glyth responded this way</h2><div id="whyInline" class="muted">No changes yet. Run a scenario to see observed facts, baseline comparison, likely impact, and the response.</div></div>
-    <div class="glass" style="margin-top:14px"><h2>Scenario simulator</h2><p class="muted small">Real orchestration, not screenshots. Each scenario updates FlowID Lite, fires the rule engine, and reorganises Today.</p>
-      <div class="scenarios">
-        <button class="btn" data-scenario="poor_sleep">😴 Poor Sleep</button><button class="btn ghost" data-scenario="heavy_workload">Heavy Workload</button><button class="btn ghost" data-scenario="hard_training">Hard Training</button><button class="btn ghost" data-scenario="important_meeting">Important Meeting</button><button class="btn ghost" data-scenario="travel_day">Travel Day</button><button class="btn ghost" id="resetBtn2">↺ Reset Scenario</button>
-      </div><p class="small muted" id="scenarioMsg">Hero demo: tap Poor Sleep, then go to Today → Why?</p></div>
+    <div class="glass" style="margin-top:14px"><h2>Why Glyth responded this way</h2><div id="whyInline" class="muted">No reasoning yet. Glyth needs your data before it can explain a day.</div></div>
   </section>
 
   <section id="view-support" class="view hidden" aria-label="Support">
     <div><div class="label">Support</div><h1 style="font-size:28px">Progress &amp; support.</h1><p class="muted" style="margin:0">How you're tracking against your goals — and the record of what's helped.</p></div>
     <div class="support-grid" role="list" aria-label="Support areas">
       <button class="support-card" data-area="mindfulness" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg></span><strong>Mindfulness</strong><span class="muted small">2-minute reset, ready</span></button>
-      <button class="support-card" data-area="finance" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3v18M16.5 6.5c-.8-1-2.4-1.5-4.5-1.5-2.8 0-4.5 1.4-4.5 3.2 0 4.6 9.3 2.4 9.3 7 0 1.9-2 3.3-4.8 3.3-2.2 0-4-.6-5-1.7"/></svg></span><strong>Finance</strong><span class="muted small">Weekly check-in due</span></button>
-      <button class="support-card" data-area="fitness" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg></span><strong>Fitness</strong><span class="muted small">3 sessions this week</span></button>
-      <button class="support-card" data-area="family" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.7-4.5 5.5-4.5S13.9 16 14.5 19"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.7c2.3.2 4.3 1.6 5 4.3"/></svg></span><strong>Family</strong><span class="muted small">Sunday call planned</span></button>
-    </div>
-    <div class="wellness-head"><div class="label">Wellness opportunities</div><span class="muted small">Swipe</span></div>
-    <div class="wellness-carousel" role="list" aria-label="Wellness opportunities">
-      <button class="wellness-card" data-wellness="walk" role="listitem"><span class="wellness-thumb" aria-hidden="true"><svg viewBox="0 0 200 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid slice"><circle cx="158" cy="20" r="9"/><path d="M8 68c28-16 44 6 72-6s44 4 66-8 34-8 46-2"/><path d="M34 58V38"/><circle cx="34" cy="30" r="11"/><path d="M62 62V44"/><circle cx="62" cy="37" r="8"/><path d="M118 66c4-10 14-16 24-16-2 10-10 16-20 16"/></svg></span><span class="wellness-tag">Mindfulness</span><strong>Lunchtime walk club</strong><span class="muted small">Today · 13:00 · 20 min</span><span class="wellness-meta">Meet at reception</span></button>
-      <button class="wellness-card" data-wellness="sleep" role="listitem"><span class="wellness-thumb" aria-hidden="true"><svg viewBox="0 0 200 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid slice"><path d="M62 14a30 30 0 1 0 18 54A36 36 0 0 1 62 14z"/><path d="M126 20l1.8 4.2L132 26l-4.2 1.8L126 32l-1.8-4.2L120 26l4.2-1.8z"/><path d="M156 44l1.4 3.1 3.1 1.4-3.1 1.4L156 53l-1.4-3.1-3.1-1.4 3.1-1.4z"/><circle cx="140" cy="66" r="1.6"/><circle cx="104" cy="56" r="1.6"/></svg></span><span class="wellness-tag">Recovery</span><strong>Sleep workshop</strong><span class="muted small">Wednesday · 17:00 · 45 min</span><span class="wellness-meta">Virtual · cameras optional</span></button>
-      <button class="wellness-card" data-wellness="yoga" role="listitem"><span class="wellness-thumb" aria-hidden="true"><svg viewBox="0 0 200 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid slice"><path d="M20 70h160"/><circle cx="100" cy="22" r="7"/><path d="M100 29v18"/><path d="M100 36 74 28M100 36l26-8"/><path d="M100 47 78 66M100 47l22 19"/><path d="M58 70h84" stroke-width="4"/></svg></span><span class="wellness-tag">Fitness</span><strong>Yoga before stand-up</strong><span class="muted small">Tomorrow · 08:15 · 30 min</span><span class="wellness-meta">Studio B · mats provided</span></button>
-      <button class="wellness-card" data-wellness="breathing" role="listitem"><span class="wellness-thumb" aria-hidden="true"><svg viewBox="0 0 200 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid slice"><path d="M16 48c14-18 28-18 42 0s28 18 42 0 28-18 42 0 28 18 42 0"/><path d="M16 64c14-14 28-14 42 0s28 14 42 0 28-14 42 0 28 14 42 0" opacity=".55"/><circle cx="100" cy="24" r="8" opacity=".8"/></svg></span><span class="wellness-tag">Focus</span><strong>Breathing for focus</strong><span class="muted small">Thursday · 09:30 · 10 min</span><span class="wellness-meta">Quiet room · drop in</span></button>
-      <button class="wellness-card" data-wellness="finance" role="listitem"><span class="wellness-thumb" aria-hidden="true"><svg viewBox="0 0 200 86" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" preserveAspectRatio="xMidYMid slice"><circle cx="76" cy="43" r="24"/><path d="M76 31v24M84 35.5c-1.6-1.6-4.4-2.4-8-2.4-4.4 0-7 2-7 4.7 0 6.8 14 3.6 14 10.4 0 2.8-3 4.8-7.4 4.8-3.4 0-6.2-1-7.8-2.7"/><path d="M124 62c10-2 18-10 20-22-12 1-21 9-22 20"/><path d="M124 62c-1-8 2-15 8-20" opacity=".6"/></svg></span><span class="wellness-tag">Finance</span><strong>Money wellbeing clinic</strong><span class="muted small">Friday · 12:00 · 25 min</span><span class="wellness-meta">1-to-1 · confidential</span></button>
+      <button class="support-card" data-area="finance" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M12 3v18M16.5 6.5c-.8-1-2.4-1.5-4.5-1.5-2.8 0-4.5 1.4-4.5 3.2 0 4.6 9.3 2.4 9.3 7 0 1.9-2 3.3-4.8 3.3-2.2 0-4-.6-5-1.7"/></svg></span><strong>Finance</strong><span class="muted small">Money check-in</span></button>
+      <button class="support-card" data-area="fitness" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l2.5-6 4 12L16 12h5"/></svg></span><strong>Fitness</strong><span class="muted small">Training resources</span></button>
+      <button class="support-card" data-area="family" role="listitem"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="9" cy="8" r="3.2"/><path d="M3.5 19c.6-3 2.7-4.5 5.5-4.5S13.9 16 14.5 19"/><circle cx="17" cy="9" r="2.4"/><path d="M15.5 14.7c2.3.2 4.3 1.6 5 4.3"/></svg></span><strong>Family</strong><span class="muted small">People and time</span></button>
     </div>
     <div class="support-list" aria-label="People support">
       <button class="support-row" data-area="workplace"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 20V8l8-5 8 5v12"/><path d="M9 20v-6h6v6"/></svg></span><span class="support-row-text"><strong>Workplace Support</strong><span class="muted small">People team resources · Confidential</span></span><span class="chevron" aria-hidden="true">›</span></button>
-      <button class="support-row" data-area="coaches"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.4-5 7-5s6.2 1.6 7 5"/></svg></span><span class="support-row-text"><strong>Coaches</strong><span class="muted small">Your coach · Next session Thursday</span></span><span class="chevron" aria-hidden="true">›</span></button>
+      <button class="support-row" id="messagesBtn"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.4 7.5L3 21l1.9-5.6A8.5 8.5 0 1 1 21 11.5z"/></svg></span><span class="support-row-text"><strong>Messages</strong><span class="muted small">Instagram · LinkedIn · WhatsApp</span></span><span class="chevron" aria-hidden="true">›</span></button>
+      <button class="support-row" data-area="coaches"><span class="support-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="8" r="3.4"/><path d="M5 20c.8-3.4 3.4-5 7-5s6.2 1.6 7 5"/></svg></span><span class="support-row-text"><strong>Coaches</strong><span class="muted small">Human coaches</span></span><span class="chevron" aria-hidden="true">›</span></button>
     </div>
+    <div class="glass" style="margin-top:14px"><div class="label">Your goals</div><div id="goalsList"></div></div>
     <div class="glass" style="margin-top:14px"><div class="label">Weekly summary</div><p id="weekly"></p></div>
+    <div class="glass" style="margin-top:14px" id="fitnessProgress"></div>
+    <div class="glass" style="margin-top:14px" id="financeProgress"></div>
+    <div class="glass" style="margin-top:14px" id="mindfulnessProgress"></div>
+  </section>
+
+  <section id="view-mindfulness" class="view hidden" aria-label="Mindfulness">
+    <button class="icon-btn" id="mindBack" type="button">‹ Support</button>
+    <div style="margin-top:14px"><div class="label">Mindfulness</div><h1 style="font-size:28px">Recommended for now.</h1><p class="muted" style="margin:0">One short session, chosen for this moment — not a library to search.</p></div>
+    <div id="mindHero"></div>
+    <div style="margin-top:18px"><div class="label">Guided sessions · recorded audio</div><div id="mindQuick" class="mind-quick"></div></div>
+    <div class="glass" style="margin-top:16px"><div class="label">This week</div><p id="mindStats" style="margin:8px 0 0"></p><p class="muted small" id="mindInsight" style="margin:6px 0 0"></p></div>
+    <div style="margin-top:18px"><div class="label">Recent</div><div id="mindRecent" style="margin-top:10px"></div></div>
+    <p class="muted small" id="mindMeta" style="margin-top:16px"></p>
+  </section>
+
+  <section id="view-finance" class="view hidden" aria-label="Finance">
+    <button class="icon-btn" id="finBack" type="button">‹ Support</button>
+    <div style="margin-top:14px"><div class="label">Finance · Private</div><h1 style="font-size:28px">How am I doing?</h1><p class="muted" style="margin:0">Upload a bank transaction export and Glyth will organise, analyse and explain it. Private to you — never shared with employers.</p></div>
+    <div id="finRoot"></div>
+  </section>
+  <section id="view-family" class="view hidden" aria-label="Family">
+    <div><div class="label">Family · Private</div><h1 style="font-size:28px">Who needs your attention?</h1><p class="muted" style="margin:0">The people who matter — remembered, without scoring or monitoring anyone.</p></div>
+    <div id="familyUpNext"></div><div id="familyReachOut"></div>
+    <div class="glass" style="margin-top:14px"><div class="label">Your people</div><div id="familyPeople"></div>
+    <form id="famAddForm" style="margin-top:14px;display:grid;gap:8px"><input id="famName" placeholder="Name" required maxlength="80"><select id="famRel"><option value="parent">Parent</option><option value="sibling">Sibling</option><option value="partner">Partner</option><option value="child">Child</option><option value="grandparent">Grandparent</option><option value="extended_family">Extended family</option><option value="guardian">Guardian</option><option value="other">Other</option></select><input id="famBday" type="date" aria-label="Birthday (optional)"><select id="famFreq"><option value="7">Every week</option><option value="14">Every 2 weeks</option><option value="30">Monthly</option><option value="3">Every few days</option><option value="60">Every 2 months</option></select><input id="famPref" placeholder="Gift preference or interest (optional)"><button class="btn" type="submit">Add family member</button></form>
+    <button class="btn ghost sm" id="famSeed" type="button" style="margin-top:10px">Load demo family</button> <span class="small muted" id="famMsg" role="status"></span></div>
+    <div id="familyDetail"></div><div id="familyProgress"></div>
+  </section>
+  <section id="view-fitness" class="view hidden" aria-label="Fitness">
+    <button class="icon-btn" id="fitBack" type="button">‹ Support</button>
+    <div style="margin-top:14px"><div class="label">Fitness</div><h1 style="font-size:28px">Today's training.</h1><p class="muted" style="margin:0">What to do today — adapted to your sleep, recovery, load and commitments.</p></div>
+    <div id="fitHero"></div>
+    <div class="glass" style="margin-top:16px"><div class="label">Today's status</div><div id="fitStatus" class="fit-status"></div></div>
+    <div style="margin-top:18px"><div class="label">This week</div><div id="fitWeek" style="margin-top:10px"></div></div>
+    <div class="glass" style="margin-top:16px"><div class="label">Workout library</div><div id="fitLibrary" class="mind-quick"></div></div>
+    <div style="margin-top:18px"><div class="label">Exercise demos</div><p class="muted small" style="margin:6px 0 0">Every movement, shown as a short looping demo. The same demos play inside your workout.</p><div id="fitExercises" class="fit-exercise-grid"></div></div>
+    <div style="margin-top:18px"><div class="label">Recent</div><div id="fitRecent" style="margin-top:10px"></div></div>
+    <div class="glass" style="margin-top:16px"><div class="label">Your fitness profile</div><div id="fitProfile"></div></div>
+    <p class="muted small" id="fitInsight" style="margin-top:16px"></p>
   </section>
 </main>
+
+
+<div id="authGate" class="auth-gate hidden" role="dialog" aria-modal="true" aria-label="Sign in to Glyth">
+  <div class="auth-gate-card">
+    <div class="brand-glyth" style="font-size:28px;letter-spacing:.18em;font-weight:800">GLYTH</div>
+    <p class="muted" style="margin:8px 0 22px">Your day, adapted. Sign in to continue.</p>
+    <div class="plan-tabs" style="margin-bottom:16px" role="tablist" aria-label="Account">
+      <button role="tab" id="gateTabIn" aria-selected="true">Sign in</button>
+      <button role="tab" id="gateTabUp" aria-selected="false">Create account</button>
+    </div>
+    <form id="gateForm" class="auth-form">
+      <label id="gateNameWrap" class="hidden">Full name<input id="gateName" type="text" autocomplete="name" placeholder="Your name"></label>
+      <label>Email<input id="gateEmail" type="email" autocomplete="email" placeholder="you@company.com" required></label>
+      <label>Password<input id="gatePassword" type="password" autocomplete="current-password" placeholder="8+ characters" required minlength="8"></label>
+      <div class="auth-row hidden" id="gateExtra" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <label>Wake time<input id="gateWake" type="time" value="06:30"></label>
+        <label>Timezone<input id="gateTz" type="text" value="Europe/London"></label>
+      </div>
+      <p class="auth-error hidden" id="gateError" role="alert"></p>
+      <button class="btn" id="gateSubmit" type="submit" style="width:100%">Sign in</button>
+    </form>
+    <button class="btn ghost hidden" id="gateDemoBtn" type="button" style="width:100%;margin-top:10px">Continue as guest (demo)</button>
+    <p class="muted small" id="gateStatus" style="margin:14px 0 0">Checking your backend…</p>
+  </div>
+</div>
 
 <div class="dock"><nav class="liquid" aria-label="Primary"><span class="nav-indicator" aria-hidden="true"></span><button data-view="today" aria-selected="true">Today</button><button data-view="insights" aria-selected="false">Insights</button><button data-view="support" aria-selected="false">Support</button></nav><div class="ask-wrap"><div class="ask-panel" id="askPanel" aria-hidden="true"><div class="ask-panel-inner" id="askPanelInner"></div></div><button class="ask-fab" id="askFab" aria-label="Ask Glyth" aria-expanded="false" title="Ask Glyth"><svg class="fab-icon is-active" data-icon-for="today" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><svg class="fab-icon" data-icon-for="insights" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.9 5.1L19 10l-5.1 1.9L12 17l-1.9-5.1L5 10l5.1-1.9L12 3z"/><path d="M19 15l.9 2.1L22 18l-2.1.9L19 21l-.9-2.1L16 18l2.1-.9L19 15z"/></svg><svg class="fab-icon" data-icon-for="support" viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.8 5.8l3.7 3.7M14.5 14.5l3.7 3.7M18.2 5.8l-3.7 3.7M9.5 14.5l-3.7 3.7"/></svg><span class="ask-dot hidden" id="askDot"></span></button></div><button class="search-fab" id="searchBtn" aria-label="Search" title="Search"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg></button><button class="settings-fab" id="settingsBtn" aria-label="Settings" title="Settings"><svg viewBox="0 0 24 24" width="23" height="23" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3.2"/><path d="M19.4 15a1.7 1.7 0 0 0 .34 1.87l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06A1.7 1.7 0 0 0 15 19.4a1.7 1.7 0 0 0-1 1.55V21a2 2 0 1 1-4 0v-.09A1.7 1.7 0 0 0 9 19.4a1.7 1.7 0 0 0-1.87.34l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.7 1.7 0 0 0 4.6 15a1.7 1.7 0 0 0-1.55-1H3a2 2 0 1 1 0-4h.09A1.7 1.7 0 0 0 4.6 9a1.7 1.7 0 0 0-.34-1.87l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.7 1.7 0 0 0 9 4.6a1.7 1.7 0 0 0 1-1.55V3a2 2 0 1 1 4 0v.09a1.7 1.7 0 0 0 1 1.51 1.7 1.7 0 0 0 1.87-.34l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.7 1.7 0 0 0 19.4 9c.24.6.86 1 1.51 1H21a2 2 0 1 1 0 4h-.09c-.65 0-1.27.4-1.51 1z"/></svg></button></div>
 
 <div class="search-panel hidden" id="searchPanel" role="dialog" aria-label="Search Glyth"><div class="search-panel-head"><div><div class="label">Search</div><div class="muted small">Today, insights, support, goals</div></div><button class="top-icon" id="searchClose" aria-label="Close search">✕</button></div><input class="search-input" id="searchInput" type="search" autocomplete="off" placeholder="Search Glyth…" aria-label="Search Glyth"><div id="searchResults"></div></div>
 
+
+<div id="mindPlayer" class="mind-player hidden" role="dialog" aria-modal="true" aria-label="Mindfulness session">
+  <div class="mind-player-art" id="mindArt"></div>
+  <button class="icon-btn" id="mindClose" type="button">Close</button>
+  <div class="mind-player-body">
+    <div class="label" id="mindPlayerKicker">Mindfulness</div>
+    <h2 id="mindPlayerTitle" style="font-size:26px;margin:6px 0"></h2>
+    <p class="muted" id="mindPlayerDur"></p>
+    <div class="mind-progress"><i id="mindProgressBar"></i></div>
+    <p class="small muted"><span id="mindElapsed">0:00</span> · <span id="mindRemaining"></span> remaining</p>
+    <div class="mind-controls">
+      <button class="btn ghost" id="mindBack15" type="button">−15s</button>
+      <button class="btn" id="mindPlayPause" type="button">Pause</button>
+      <button class="btn ghost" id="mindFwd15" type="button">+15s</button>
+    </div>
+    <button class="btn ghost hidden" id="mindDemoSeek" type="button" style="margin-top:10px">Demo: jump near the end</button>
+    <audio id="mindAudio" preload="metadata" playsinline class="hidden"></audio>
+    <div id="mindComplete" class="hidden" style="margin-top:22px">
+      <h3>How do you feel now?</h3>
+      <div class="mind-feedback">
+        <button class="btn ghost" data-mind-feedback="lower" type="button">Less settled</button>
+        <button class="btn ghost" data-mind-feedback="same" type="button">Same</button>
+        <button class="btn" data-mind-feedback="better" type="button">More settled</button>
+      </div>
+      <p class="muted small" id="mindFeedbackMsg"></p>
+    </div>
+    <details style="margin-top:20px"><summary class="small" style="cursor:pointer;font-weight:600">Read the session</summary><div id="mindScript" class="mind-script"></div></details>
+  </div>
+</div>
+<div id="fitPlayer" class="fit-player hidden" role="dialog" aria-modal="true" aria-label="Workout session">
+  <div class="fit-player-head">
+    <button class="fit-icon-btn" id="fitClose" type="button" aria-label="Close workout">✕</button>
+    <div class="fit-player-head-text"><span class="label" id="fitPlayerKicker">Workout</span><strong id="fitPlayerTitle"></strong></div>
+    <button class="fit-finish-link" id="fitFinishTop" type="button">Finish</button>
+  </div>
+  <div class="fit-progress"><i id="fitProgressBar"></i></div>
+  <div id="fitPageHost" class="fit-page-host"></div>
+</div>
 <div id="backdrop" class="backdrop hidden"></div>
 <div id="sheet" class="sheet hidden" role="dialog" aria-modal="true" aria-label="Sheet"><div class="sheet-inner"><button class="icon-btn" id="closeSheet" style="float:right">Close</button><div id="sheetContent"></div></div></div>
 
-<script type="module" src="app.js?v=blur-headings"></script>
+<script type="module" src="app.js?v=realuser1"></script>
 </body></html>

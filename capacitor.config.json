@@ -1,0 +1,7 @@
+{
+  "appId": "app.glyth.snapshot",
+  "appName": "Glyth",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "ios": { "contentInset": "always" }
+}
